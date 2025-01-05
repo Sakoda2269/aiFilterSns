@@ -17,8 +17,8 @@ public class AccountController {
 		this.accountService = as;
 	}
 	
-	@PostMapping("/register")
-	public String register(@RequestParam("email") String email, @RequestParam("name") String name, @RequestParam("password") String password) {
+	@PostMapping("/signup")
+	public String signup(@RequestParam("email") String email, @RequestParam("name") String name, @RequestParam("password") String password) {
 		accountService.registerAccount(email, name, password);
 		return "success";
 	}
