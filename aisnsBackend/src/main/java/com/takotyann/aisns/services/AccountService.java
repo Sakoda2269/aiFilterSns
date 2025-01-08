@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.takotyann.aisns.config.security.AccountDetails;
 import com.takotyann.aisns.entities.Account;
+import com.takotyann.aisns.exceptions.AccountNotFoundException;
 import com.takotyann.aisns.exceptions.EmailConflictException;
 import com.takotyann.aisns.repositories.AccountRepository;
 
@@ -37,18 +38,27 @@ public class AccountService {
 		accountRepository.save(account);
 	}
 	
+	public Account getAccountById(String accountId) {
+		return accountRepository.findById(accountId).orElseThrow(() -> new AccountNotFoundException("account not found"));
+	}
+	
 	public Account getLoginedAccount() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth != null && auth.isAuthenticated()) {
 			Object principal = auth.getPrincipal();
 			if(principal instanceof AccountDetails) {
 				String accountId = ((AccountDetails) principal).getUsername();
-				Account account = accountRepository.findById(accountId).orElseThrow();
+				Account account = getAccountById(accountId);
 				return account;
 			}
 		}
 		return null;
 	}
 	
+	public void follow(Account follower, String followeeId) {
+		Account followee = getAccountById(followeeId);
+		follower.addFollowee(followee);
+		followee.addFollower(follower);
+	}
 	
 }

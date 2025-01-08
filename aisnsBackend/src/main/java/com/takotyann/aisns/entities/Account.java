@@ -55,4 +55,12 @@ public class Account {
 	@ManyToMany(mappedBy="followers")
 	private List<Account> followees;
 	
+	public void addFollower(Account account) {
+		this.followers.add(account);
+	}
+	
+	public void addFollowee(Account account) {
+		this.followees.add(account);
+	}
+	
 }
