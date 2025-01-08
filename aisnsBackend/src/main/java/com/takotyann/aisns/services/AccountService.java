@@ -1,5 +1,6 @@
 package com.takotyann.aisns.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.security.core.Authentication;
@@ -40,6 +41,10 @@ public class AccountService {
 	
 	public Account getAccountById(String accountId) {
 		return accountRepository.findById(accountId).orElseThrow(() -> new AccountNotFoundException("account not found"));
+	}
+	
+	public List<Account> getAllAccounts() {
+		return accountRepository.findAll();
 	}
 	
 	public Account getLoginedAccount() {

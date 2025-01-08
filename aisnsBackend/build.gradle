@@ -37,6 +37,14 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'com.auth0:java-jwt:3.8.1'
+	
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.18.0'
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.0'
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.0'
+
+	
 }
 
 tasks.named('test') {
