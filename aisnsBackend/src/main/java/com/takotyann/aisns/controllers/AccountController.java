@@ -1,5 +1,8 @@
 package com.takotyann.aisns.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,10 +20,12 @@ public class AccountController {
 		this.accountService = as;
 	}
 	
-	@PostMapping("/register")
-	public String register(@RequestParam("email") String email, @RequestParam("name") String name, @RequestParam("password") String password) {
+	@PostMapping("/signup")
+	public Map<String, String> signup(@RequestParam("email") String email, @RequestParam("name") String name, @RequestParam("password") String password) {
 		accountService.registerAccount(email, name, password);
-		return "success";
+		Map<String, String> res = new HashMap<>();
+		res.put("result", "success");
+		return res;
 	}
 	
 }
