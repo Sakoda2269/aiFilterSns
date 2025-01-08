@@ -11,6 +11,10 @@ export default function Signup() {
     const [error, setError] = useState("");
 
     const send = async () => {
+        if(pass != repass) {
+            setError("パスワードが一致しません");
+            return
+        }
         const body = {
             email: email,
             name: name,
