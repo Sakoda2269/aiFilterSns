@@ -1,8 +1,11 @@
 "use client"
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Signup() {
+
+    const router = useRouter();
 
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
@@ -27,7 +30,7 @@ export default function Signup() {
             headers: header
         });
         if(res.ok) {
-             
+             router.push("/login");
         } else {
             const data = await res.text();
             setError(data);
