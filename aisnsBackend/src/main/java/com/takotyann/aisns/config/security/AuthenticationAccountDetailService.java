@@ -32,8 +32,8 @@ public class AuthenticationAccountDetailService implements AuthenticationUserDet
 		Account account = new Account();
 		account.setAccountId(decodedJwt.getClaim("account_id").asString());
 		account.setName(decodedJwt.getClaim("name").asString());
-		account.setEmail(decodedJwt.getClaim("email").asString());
 		account.setRoles(decodedJwt.getClaim("roles").asString());
+		account.setPassword("");
 		return new AccountDetails(account);
 	}
 

@@ -14,7 +14,7 @@ public class AccountDetails extends User{
 	
 	private final Account account;
 	public AccountDetails(Account account) {
-		super(account.getEmail(), account.getPassword(), 
+		super(account.getAccountId(), account.getPassword(), 
 				Arrays.asList(account.getRoles().split(",")).stream().map(role -> new SimpleGrantedAuthority(role)).toList()
 			);
 		this.account = account;

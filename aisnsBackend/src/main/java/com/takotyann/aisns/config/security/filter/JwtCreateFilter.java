@@ -13,6 +13,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.takotyann.aisns.config.security.AccountDetails;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -20,6 +21,9 @@ public class JwtCreateFilter extends UsernamePasswordAuthenticationFilter{
 	
 	private final AuthenticationManager authenticationManager;
 	private static final String SECRET = System.getenv("JWT_SECRET");
+	private static final long EXPIARTION_TIME = 86400000;//1 day
+	
+	private static final boolean IS_SECURE = Boolean.parseBoolean(System.getenv("SECURE"));
 	
 	public JwtCreateFilter(AuthenticationManager manager) {
 		this.authenticationManager = manager;
@@ -28,19 +32,26 @@ public class JwtCreateFilter extends UsernamePasswordAuthenticationFilter{
 		this.setAuthenticationSuccessHandler((req, res, ex) -> {
 			Date issuedAt = new Date();
 			Object principal = ex.getPrincipal();
-			String email = ((AccountDetails) principal).getAccount().getEmail();
 			String id = ((AccountDetails) principal).getAccount().getAccountId();
+			String name = ((AccountDetails) principal).getAccount().getName();
 			String token = JWT.create()
 					.withIssuer("tako")
 					.withIssuedAt(issuedAt)
-					.withExpiresAt(new Date(issuedAt.getTime() + 1000 * 60 * 60))
-					.withClaim("email", email)
-					.withClaim("id", id)
-					.withClaim("name", ex.getName())
+					.withExpiresAt(new Date(issuedAt.getTime() + EXPIARTION_TIME))
+					.withClaim("account_id", id)
+					.withClaim("name", name)
 					.withClaim("roles", ex.getAuthorities().iterator().next().toString())
 					.sign(Algorithm.HMAC256(SECRET));
-			res.setHeader("X-AUHT-TOKEN", token);
-			res.setHeader("email", email);
+			
+			Cookie cookie = new Cookie("token", token);
+			cookie.setHttpOnly(true);
+			cookie.setSecure(IS_SECURE);
+			cookie.setPath("/");
+			cookie.setMaxAge(24 * 60 * 60);//1 day
+			res.addCookie(cookie);
+			
+//			res.setHeader("X-AUHT-TOKEN", token);
+//			res.setHeader("email", email);
 			res.setStatus(200);
 		});
 	}
