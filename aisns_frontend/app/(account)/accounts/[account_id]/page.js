@@ -48,9 +48,26 @@ export default function AccountPage() {
         });
         if(res.ok) {
             setFollowing(true);
+            const num = await res.text();
+            setFollowerNum(Number(num))
         }
-        
     }
+
+    const unFollow = async () => {
+        const res = await fetch("/api/accounts/" + accountId + "/follow", {
+            body: JSON.stringify({"follow": false}),
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            credentials: 'include'
+        });
+        if(res.ok) {
+            setFollowing(false);
+            const num = await res.text();
+            console.log(num)
+            setFollowerNum(Number(num))
+        }
+    }
+
 
     return (
         <div>
@@ -65,7 +82,7 @@ export default function AccountPage() {
                                     {!following ? 
                                         <button className="btn btn-primary rounded-pill" onClick={follow}>フォロー</button>
                                         :
-                                        <button className="btn btn-secondary rounded-pill" onClick={follow}>フォロー解除</button>}
+                                        <button className="btn btn-secondary rounded-pill" onClick={unFollow}>フォロー解除</button>}
                                 </div>}
                             </span>
                             <div className="container">

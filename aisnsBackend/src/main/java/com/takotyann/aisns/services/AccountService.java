@@ -81,10 +81,16 @@ public class AccountService {
 		return null;
 	}
 	
-	public void follow(Account follower, String followeeId) {
+	public int follow(Account follower, String followeeId) {
 		Follow follow = new Follow();
 		follow.setFollowId(new FollowId(follower.getAccountId(), followeeId));
 		followRepository.save(follow);
+		return followRepository.getFollowerNum(followeeId);
+	}
+	
+	public int unFollow(Account follower, String accountId) {
+		followRepository.deleteById(new FollowId(follower.getAccountId(), accountId));
+		return followRepository.getFollowerNum(accountId);
 	}
 	
 }
