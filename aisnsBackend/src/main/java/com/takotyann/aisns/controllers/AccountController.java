@@ -31,6 +31,11 @@ public class AccountController {
 		return ResponseEntity.ok(accountService.registerAccount(email, name, password));
 	}
 	
+	@GetMapping("/{accountId}")
+	public ResponseEntity<AccountDto> getAccount(@PathVariable String accountId) {
+		return ResponseEntity.ok(new AccountDto(accountService.getAccountById(accountId)));
+	}
+	
 	@PutMapping("/{accountId}/follow")
 	public ResponseEntity<String> followAccount(@PathVariable String accountId) {
 		Account loginedAccount = accountService.getLoginedAccount();
