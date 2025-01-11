@@ -64,6 +64,8 @@ public class AccountForTest {
 	public void follow(AccountForTest account) throws Exception {
 		mockMvc.perform(
 				put("/api/accounts/" + account.getId() + "/follow")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("follow", "true")
 				.cookie(new Cookie("token", token))
 			).andDo(print())
 			.andExpect(status().isOk());

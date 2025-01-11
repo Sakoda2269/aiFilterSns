@@ -18,7 +18,7 @@ public interface PostRepository extends JpaRepository<Post, String>{
 					INNER JOIN accounts a
 					ON p.author_id = a.account_id
 					WHERE p.author_id IN (
-						SELECT followee_id
+						SELECT account_id
 						FROM follows
 						WHERE follower_id = :account_id
 					) OR p.author_id = :account_id;

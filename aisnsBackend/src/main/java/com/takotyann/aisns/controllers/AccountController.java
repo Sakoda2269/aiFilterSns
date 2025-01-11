@@ -33,7 +33,7 @@ public class AccountController {
 	
 	@GetMapping("/{accountId}")
 	public ResponseEntity<AccountDto> getAccount(@PathVariable String accountId) {
-		return ResponseEntity.ok(new AccountDto(accountService.getAccountById(accountId)));
+		return ResponseEntity.ok(accountService.getAccountDtoById(accountId));
 	}
 	
 	@PutMapping("/{accountId}/follow")

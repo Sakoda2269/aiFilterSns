@@ -11,7 +11,7 @@ public interface FollowRepository extends JpaRepository<Follow, FollowId>{
 	
 	@Query(nativeQuery=true,
 			value="""
-					SELECT COUNT(1) FROM follows WHERE followee_id = :account_id
+					SELECT COUNT(1) FROM follows WHERE account_id = :account_id
 					""")
 	Integer getFollowerNum(@Param("account_id") String accountId);
 	
@@ -23,7 +23,7 @@ public interface FollowRepository extends JpaRepository<Follow, FollowId>{
 	
 	@Query(nativeQuery=true,
 			value="""
-					SELECT EXISTS(SELECT 1 FROM follows WHERE follower_id = :account_id AND followee_id = :other_id)
+					SELECT EXISTS(SELECT 1 FROM follows WHERE follower_id = :account_id AND account_id = :other_id)
 					"""
 			)
 	Boolean isFollowing(@Param("account_id") String accountId, @Param("other_id") String otherId);
