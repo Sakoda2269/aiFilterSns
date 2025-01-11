@@ -15,7 +15,7 @@ import com.takotyann.aisns.services.PostService;
 
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("/api/post")
+@RequestMapping("/api/posts")
 @RestController
 @RequiredArgsConstructor
 public class PostController {
@@ -23,7 +23,7 @@ public class PostController {
 	private final AccountService accountService;
 	private final PostService postService;
 	
-	@GetMapping("")
+	@GetMapping("/follows")
 	public ResponseEntity<Page<PostDto>> getTimeline() {
 		Account account = accountService.getLoginedAccount();
 		if(account != null) {

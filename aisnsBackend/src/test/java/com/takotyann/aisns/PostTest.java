@@ -45,7 +45,7 @@ public class PostTest {
 		String token = cookie.split(";")[0].split("=")[1];
 		
 		mockMvc.perform(
-			post("/api/post")
+			post("/api/posts")
 			.cookie(new Cookie("token", token))
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 			.param("contents", "hello world")

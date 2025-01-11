@@ -113,7 +113,7 @@ public class FollowTest {
 		
 		public void posts(String contents) throws Exception {
 			mockMvc.perform(
-					post("/api/post")
+					post("/api/posts")
 					.cookie(new Cookie("token", token))
 					.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 					.param("contents", contents)
@@ -124,7 +124,7 @@ public class FollowTest {
 		public Map<String, Set<String>> getTimeLine() throws Exception {
 			Map<String, Set<String>> result = new HashMap<>();
 			MvcResult  res = mockMvc.perform(
-					get("/api/post")
+					get("/api/posts/follows")
 					.cookie(new Cookie("token", token))
 				).andDo(print())
 				.andExpect(status().isOk())
