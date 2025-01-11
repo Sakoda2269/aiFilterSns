@@ -1,9 +1,7 @@
 package com.takotyann.aisns.controllers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,11 +27,8 @@ public class AccountController {
 	}
 	
 	@PostMapping("/signup")
-	public Map<String, String> signup(@RequestParam("email") String email, @RequestParam("name") String name, @RequestParam("password") String password) {
-		accountService.registerAccount(email, name, password);
-		Map<String, String> res = new HashMap<>();
-		res.put("result", "success");
-		return res;
+	public ResponseEntity<String> signup(@RequestParam("email") String email, @RequestParam("name") String name, @RequestParam("password") String password) {
+		return ResponseEntity.ok(accountService.registerAccount(email, name, password));
 	}
 	
 	@PutMapping("/{accountId}/follow")

@@ -10,22 +10,25 @@ import org.springframework.stereotype.Service;
 
 import com.takotyann.aisns.config.security.AccountDetails;
 import com.takotyann.aisns.entities.Account;
+import com.takotyann.aisns.entities.Follow;
+import com.takotyann.aisns.entities.FollowId;
 import com.takotyann.aisns.exceptions.AccountNotFoundException;
 import com.takotyann.aisns.exceptions.EmailConflictException;
 import com.takotyann.aisns.repositories.AccountRepository;
+import com.takotyann.aisns.repositories.FollowRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AccountService {
 
 	private final AccountRepository accountRepository;
 	private final PasswordEncoder encoder;
+	private final FollowRepository followRepository;
 	
-	public AccountService(AccountRepository accountRepo, PasswordEncoder pe) {
-		accountRepository = accountRepo;
-		encoder = pe;
-	}
 	
-	public void registerAccount(String email, String name, String password) {
+	public String registerAccount(String email, String name, String password) {
 		if(accountRepository.existsByEmail(email)) {
 			throw new EmailConflictException("this email has already used");
 		}
@@ -33,10 +36,12 @@ public class AccountService {
 		account.setEmail(email);
 		account.setName(name);
 		account.setPassword(encoder.encode(password));
-		account.setAccountId(UUID.randomUUID().toString());
+		String id = UUID.randomUUID().toString();
+		account.setAccountId(id);
 		account.setRoles("ROLE_GENERAL");
 		account.setIsEnabled(false);
 		accountRepository.save(account);
+		return id;
 	}
 	
 	public Account getAccountById(String accountId) {
@@ -61,9 +66,9 @@ public class AccountService {
 	}
 	
 	public void follow(Account follower, String followeeId) {
-		Account followee = getAccountById(followeeId);
-		follower.addFollowee(followee);
-		followee.addFollower(follower);
+		Follow follow = new Follow();
+		follow.setFollowId(new FollowId(follower.getAccountId(), followeeId));
+		followRepository.save(follow);
 	}
 	
 }
