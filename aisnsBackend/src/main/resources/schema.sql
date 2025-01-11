@@ -2,3 +2,28 @@ DROP TABLE IF EXISTS likes;
 DROP TABLE IF EXISTS follows;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS accounts;
+
+CREATE TABLE IF NOT EXISTS accounts(
+	account_id VARCHAR(255) PRIMARY KEY,
+	email VARCHAR(255),
+	name VARCHAR(255),
+	password VARCHAR(255),
+	roles VARCHAR(255),
+	is_enabled BOOLEAN
+);
+
+CREATE TABLE IF NOT EXISTS posts(
+	post_id VARCHAR(255) PRIMARY KEY,
+	author_id VARCHAR(255),
+	contents VARCHAR(255),
+	created_date TIMESTAMP,
+	FOREIGN KEY (author_id) REFERENCES accounts(account_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS follows(
+	follower_id VARCHAR(255),
+	followee_id VARCHAR(255),
+	PRIMARY KEY(follower_id, followee_id),
+	FOREIGN KEY(follower_id) REFERENCES accounts(account_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY(followee_id) REFERENCES accounts(account_id) ON DELETE CASCADE ON UPDATE CASCADE
+);

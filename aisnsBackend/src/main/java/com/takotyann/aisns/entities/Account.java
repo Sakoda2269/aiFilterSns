@@ -1,15 +1,8 @@
 package com.takotyann.aisns.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -22,37 +15,19 @@ public class Account {
 	@Column(name="account_id")
 	private String accountId;
 	
+	@Column(name="email")
 	private String email;
 	
+	@Column(name="name")
 	private String name;
 	
+	@Column(name="password")
 	private String password;
 	
+	@Column(name="roles")
 	private String roles;
 	
 	@Column(name="is_enabled")
 	private Boolean isEnabled;
-	
-	@OneToMany(mappedBy="author")
-	private List<Post> posts = new ArrayList<>();
-	
-	@ManyToMany
-	@JoinTable(
-		name="likes",
-		joinColumns=@JoinColumn(name="account_id"),
-		inverseJoinColumns=@JoinColumn(name="post_id")
-	)
-	private List<Post> likes;
-	
-	@ManyToMany
-	@JoinTable(
-		name="follows",
-		joinColumns=@JoinColumn(name="follower_id"),
-		inverseJoinColumns=@JoinColumn(name="followee_id")
-	)
-	private List<Account> followers;
-	
-	@ManyToMany(mappedBy="followers")
-	private List<Account> followees;
 	
 }

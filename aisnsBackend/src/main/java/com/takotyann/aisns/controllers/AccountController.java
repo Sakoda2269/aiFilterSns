@@ -1,13 +1,19 @@
 package com.takotyann.aisns.controllers;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.takotyann.aisns.dtos.AccountDto;
+import com.takotyann.aisns.entities.Account;
 import com.takotyann.aisns.services.AccountService;
 
 @RestController
@@ -21,11 +27,27 @@ public class AccountController {
 	}
 	
 	@PostMapping("/signup")
-	public Map<String, String> signup(@RequestParam("email") String email, @RequestParam("name") String name, @RequestParam("password") String password) {
-		accountService.registerAccount(email, name, password);
-		Map<String, String> res = new HashMap<>();
-		res.put("result", "success");
-		return res;
+	public ResponseEntity<String> signup(@RequestParam("email") String email, @RequestParam("name") String name, @RequestParam("password") String password) {
+		return ResponseEntity.ok(accountService.registerAccount(email, name, password));
+	}
+	
+	@PutMapping("/{accountId}/follow")
+	public ResponseEntity<String> followAccount(@PathVariable String accountId) {
+		Account loginedAccount = accountService.getLoginedAccount();
+		if(loginedAccount != null) {
+			accountService.follow(loginedAccount, accountId);
+			return ResponseEntity.ok("follow success");
+		}
+		return ResponseEntity.status(401).body("unAuthorized");
+	}
+	
+	@GetMapping("")
+	public ResponseEntity<List<AccountDto>> getAccounts() {
+		List<AccountDto> res = new ArrayList<>();
+		for(Account account : accountService.getAllAccounts()) {
+			res.add(new AccountDto(account));
+		}
+		return ResponseEntity.ok(res);
 	}
 	
 }
