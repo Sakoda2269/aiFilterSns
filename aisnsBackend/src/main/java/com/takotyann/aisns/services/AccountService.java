@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.takotyann.aisns.config.security.AccountDetails;
+import com.takotyann.aisns.dtos.AccountDto;
 import com.takotyann.aisns.entities.Account;
 import com.takotyann.aisns.entities.Follow;
 import com.takotyann.aisns.entities.FollowId;
@@ -46,6 +47,21 @@ public class AccountService {
 	
 	public Account getAccountById(String accountId) {
 		return accountRepository.findById(accountId).orElseThrow(() -> new AccountNotFoundException("account not found"));
+	}
+	
+	public AccountDto getAccountDtoById(String accountId) {
+		Account account = getAccountById(accountId);
+		int followerNum = followRepository.getFollowerNum(accountId);
+		int followeeNum = followRepository.getFolloweeNum(accountId);
+		AccountDto accountDto = new AccountDto(account);
+		accountDto.setFollowerNum(followerNum);
+		accountDto.setFolloweeNum(followeeNum);
+		Account logined = getLoginedAccount();
+		if(logined != null && !logined.getAccountId().equals(accountId)) {
+			boolean following = followRepository.isFollowing(logined.getAccountId(), accountId);
+			accountDto.setFollowing(following);
+		}
+		return accountDto;
 	}
 	
 	public List<Account> getAllAccounts() {
