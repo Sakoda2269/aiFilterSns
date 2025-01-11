@@ -73,6 +73,9 @@ public class SecurityConfig {
 		.sessionManagement(session -> 
 			session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		)
+		.headers(headers -> headers.frameOptions(
+				frame -> frame.sameOrigin())
+		)
 		;
 		return http.build();
 	}

@@ -19,13 +19,16 @@ export default function Login() {
             password: pass
         };
         const header = { "Content-Type": "application/json" };
-        const res = await fetch("/api/login", {
+        const res = await fetch("http://localhost:3000/api/login", {
             method: "POST",
             body: JSON.stringify(body),
-            headers: header
+            headers: header, 
+            credentials: 'include'
         });
         if(res.ok) {
-            router.push("/home");
+            const data = await res.text();
+            localStorage.setItem("id", data);
+            router.push("/accounts/" + data);
         } else {
             setError("メールアドレスまたはパスワードが違います");
         }

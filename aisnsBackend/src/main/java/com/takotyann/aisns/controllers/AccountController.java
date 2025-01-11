@@ -33,17 +33,22 @@ public class AccountController {
 	
 	@GetMapping("/{accountId}")
 	public ResponseEntity<AccountDto> getAccount(@PathVariable String accountId) {
-		return ResponseEntity.ok(new AccountDto(accountService.getAccountById(accountId)));
+		return ResponseEntity.ok(accountService.getAccountDtoById(accountId));
 	}
 	
 	@PutMapping("/{accountId}/follow")
-	public ResponseEntity<String> followAccount(@PathVariable String accountId) {
+	public ResponseEntity<Integer> followAccount(@PathVariable String accountId, @RequestParam("follow") boolean follow) {
 		Account loginedAccount = accountService.getLoginedAccount();
 		if(loginedAccount != null) {
-			accountService.follow(loginedAccount, accountId);
-			return ResponseEntity.ok("follow success");
+			int res;
+			if(follow) {
+				res = accountService.follow(loginedAccount, accountId);
+			} else {
+				res = accountService.unFollow(loginedAccount, accountId);
+			}
+			return ResponseEntity.ok(res);
 		}
-		return ResponseEntity.status(401).body("unAuthorized");
+		return ResponseEntity.status(401).body(-1);
 	}
 	
 	@GetMapping("")

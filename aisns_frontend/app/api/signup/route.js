@@ -13,7 +13,7 @@ export async function POST(req) {
         headers: { "Content-Type": "application/x-www-form-urlencoded" }
     });
     if(res.ok) {
-        const data = await res.json();
+        const data = await res.text();
         return new Response(JSON.stringify(data), {status: 200})
     } else {
         const data = res.body;

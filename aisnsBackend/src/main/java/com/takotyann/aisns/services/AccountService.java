@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.takotyann.aisns.config.security.AccountDetails;
+import com.takotyann.aisns.dtos.AccountDto;
 import com.takotyann.aisns.entities.Account;
 import com.takotyann.aisns.entities.Follow;
 import com.takotyann.aisns.entities.FollowId;
@@ -48,6 +49,21 @@ public class AccountService {
 		return accountRepository.findById(accountId).orElseThrow(() -> new AccountNotFoundException("account not found"));
 	}
 	
+	public AccountDto getAccountDtoById(String accountId) {
+		Account account = getAccountById(accountId);
+		int followerNum = followRepository.getFollowerNum(accountId);
+		int followeeNum = followRepository.getFolloweeNum(accountId);
+		AccountDto accountDto = new AccountDto(account);
+		accountDto.setFollowerNum(followerNum);
+		accountDto.setFolloweeNum(followeeNum);
+		Account logined = getLoginedAccount();
+		if(logined != null && !logined.getAccountId().equals(accountId)) {
+			boolean following = followRepository.isFollowing(logined.getAccountId(), accountId);
+			accountDto.setFollowing(following);
+		}
+		return accountDto;
+	}
+	
 	public List<Account> getAllAccounts() {
 		return accountRepository.findAll();
 	}
@@ -65,10 +81,16 @@ public class AccountService {
 		return null;
 	}
 	
-	public void follow(Account follower, String followeeId) {
+	public int follow(Account follower, String followeeId) {
 		Follow follow = new Follow();
 		follow.setFollowId(new FollowId(follower.getAccountId(), followeeId));
 		followRepository.save(follow);
+		return followRepository.getFollowerNum(followeeId);
+	}
+	
+	public int unFollow(Account follower, String accountId) {
+		followRepository.deleteById(new FollowId(follower.getAccountId(), accountId));
+		return followRepository.getFollowerNum(accountId);
 	}
 	
 }

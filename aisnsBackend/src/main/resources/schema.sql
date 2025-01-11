@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS posts(
 
 CREATE TABLE IF NOT EXISTS follows(
 	follower_id VARCHAR(255),
-	followee_id VARCHAR(255),
-	PRIMARY KEY(follower_id, followee_id),
+	account_id VARCHAR(255),
+	PRIMARY KEY(follower_id, account_id),
 	FOREIGN KEY(follower_id) REFERENCES accounts(account_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY(followee_id) REFERENCES accounts(account_id) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY(account_id) REFERENCES accounts(account_id) ON DELETE CASCADE ON UPDATE CASCADE
 );

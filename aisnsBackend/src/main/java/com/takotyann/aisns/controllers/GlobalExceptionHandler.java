@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
 	}
 	
 	@ExceptionHandler(AccountNotFoundException.class)
-	public ResponseEntity<String> handleAccountNotFoundException(EmailConflictException ex) {
+	public ResponseEntity<String> handleAccountNotFoundException(AccountNotFoundException ex) {
 		return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
 	}
 	

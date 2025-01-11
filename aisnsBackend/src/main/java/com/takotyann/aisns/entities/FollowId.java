@@ -13,12 +13,12 @@ import lombok.Setter;
 public class FollowId implements Serializable{
 	
 	private String followerId;
-	private String followeeId;
+	private String accountId;
 	
 	public FollowId() {}
 	
-	public FollowId(String followerId, String followeeId) {
-		this.followeeId = followeeId;
+	public FollowId(String followerId, String accountId) {
+		this.accountId = accountId;
 		this.followerId = followerId;
 	}
 	
@@ -27,12 +27,12 @@ public class FollowId implements Serializable{
 		if(this == o) return true;
 		if(o == null || getClass() != o.getClass()) return false;
 		FollowId fid = (FollowId)o;
-		return fid.getFolloweeId().equals(followeeId) && fid.getFollowerId().equals(followerId);
+		return fid.getAccountId().equals(accountId) && fid.getFollowerId().equals(followerId);
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(followerId, followeeId);
+		return Objects.hash(followerId, accountId);
 	}
 	
 	

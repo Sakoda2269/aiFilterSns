@@ -9,6 +9,9 @@ public class AccountDto {
 	
 	private String name;
 	private String accountId;
+	private int followerNum;
+	private int followeeNum;
+	private boolean isFollowing;
 
 	public AccountDto(Account account) {
 		name = account.getName();
