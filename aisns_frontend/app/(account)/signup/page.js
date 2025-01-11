@@ -27,10 +27,10 @@ export default function Signup() {
         const res = await fetch("/api/signup", {
             method: "POST",
             body: JSON.stringify(body),
-            headers: header
+            headers: header,
         });
         if(res.ok) {
-             router.push("/login");
+            router.push("/login");
         } else {
             const data = await res.text();
             setError(data);
