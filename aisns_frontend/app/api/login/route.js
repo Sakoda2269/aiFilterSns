@@ -13,7 +13,7 @@ export async function POST(req) {
     });
     console.log(res);
     if(res.ok) {
-        return new Response(res.headers.get("x-account-id"), {status: 200})
+        return new Response(res.headers.get("x-account-id"), {status: 200, headers: {"Set-Cookie": res.headers.get('set-cookie')}})
     } else {
         const data = await res.text();
         return new Response(data, {status: res.status});

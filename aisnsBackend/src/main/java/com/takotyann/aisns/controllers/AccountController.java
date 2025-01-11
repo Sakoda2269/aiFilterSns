@@ -37,7 +37,7 @@ public class AccountController {
 	}
 	
 	@PutMapping("/{accountId}/follow")
-	public ResponseEntity<String> followAccount(@PathVariable String accountId) {
+	public ResponseEntity<String> followAccount(@PathVariable String accountId, @RequestParam("follow") boolean follow) {
 		Account loginedAccount = accountService.getLoginedAccount();
 		if(loginedAccount != null) {
 			accountService.follow(loginedAccount, accountId);

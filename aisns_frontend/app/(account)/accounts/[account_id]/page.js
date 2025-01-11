@@ -11,13 +11,13 @@ export default function AccountPage() {
     const [loading, setLoading] = useState(true);
     const [followerNum, setFollowerNum] = useState(0);
     const [followeeNum, setFolloweeNum] = useState(0);
+    const [following, setFollowing] = useState(false);
     const [statusCode, setStatusCode] = useState(0)
     const params = useParams();
 
     const id = localStorage.getItem("id");
 
     useEffect(() => {
-
         const getAccount = async () => {
             const res = await fetch("/api/accounts/" + params.account_id, {
                 method: "GET",
@@ -29,6 +29,7 @@ export default function AccountPage() {
                 setAccountName(data.name);
                 setFolloweeNum(data.followeeNum);
                 setFollowerNum(data.followerNum);
+                setFollowing(data.following);
             }
             setStatusCode(res.status)
             setLoading(false)
@@ -37,6 +38,19 @@ export default function AccountPage() {
         setAccountId(params.account_id);
         getAccount();
     }, [params])
+
+    const follow = async () => {
+        const res = await fetch("/api/accounts/" + accountId + "/follow", {
+            body: JSON.stringify({"follow": true}),
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            credentials: 'include'
+        });
+        if(res.ok) {
+            setFollowing(true);
+        }
+        
+    }
 
     return (
         <div>
@@ -48,7 +62,10 @@ export default function AccountPage() {
                             <span style={{display: "flex"}}>
                                 <h3>{accountName}</h3>
                                 {id != accountId && <div className="container">
-                                    <button className="btn btn-primary rounded-pill">フォロー</button>
+                                    {!following ? 
+                                        <button className="btn btn-primary rounded-pill" onClick={follow}>フォロー</button>
+                                        :
+                                        <button className="btn btn-secondary rounded-pill" onClick={follow}>フォロー解除</button>}
                                 </div>}
                             </span>
                             <div className="container">
