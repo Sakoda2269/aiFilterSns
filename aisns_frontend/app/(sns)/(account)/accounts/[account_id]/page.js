@@ -15,7 +15,7 @@ export default function AccountPage() {
     const [statusCode, setStatusCode] = useState(0)
     const params = useParams();
 
-    const id = localStorage.getItem("id");
+    const id = sessionStorage.getItem("id");
 
     useEffect(() => {
         const getAccount = async () => {

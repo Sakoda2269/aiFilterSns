@@ -1,5 +1,6 @@
 package com.takotyann.aisns.services;
 
+import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -26,11 +27,16 @@ public class PostService {
 		post.setPostId(id);
 		post.setAuthorId(author.getAccountId());
 		post.setContents(contents);
+		post.setCreatedDate(new Date());
 		postRepository.save(post);
 		return id;
 	}
 	
-	public Page<PostDto> getTimeline(Account account, int page) {
+	public Page<PostDto> getTimeLine(int page) {
+		return postRepository.getAllPost(PageRequest.of(page, 10));
+	}
+	
+	public Page<PostDto> getFollowTimeline(Account account, int page) {
 		var tmp = postRepository.getFollowedPost(account.getAccountId(), PageRequest.of(page, 10));
 		return tmp;
 	}

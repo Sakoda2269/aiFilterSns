@@ -23,11 +23,16 @@ public class PostController {
 	private final AccountService accountService;
 	private final PostService postService;
 	
+	@GetMapping("")
+	public ResponseEntity<Page<PostDto>> getTimeline(@RequestParam(name = "page", defaultValue="0") int pageNum) {
+		return ResponseEntity.ok(postService.getTimeLine(pageNum));
+	}
+	
 	@GetMapping("/follows")
-	public ResponseEntity<Page<PostDto>> getTimeline() {
+	public ResponseEntity<Page<PostDto>> getFollowTimeline(@RequestParam(name = "page", defaultValue="0") int pageNum) {
 		Account account = accountService.getLoginedAccount();
 		if(account != null) {
-			return ResponseEntity.ok(postService.getTimeline(account, 0));
+			return ResponseEntity.ok(postService.getFollowTimeline(account, 0));
 		}
 		return ResponseEntity.status(401).body(null);
 	}
