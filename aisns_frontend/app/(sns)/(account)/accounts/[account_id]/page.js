@@ -102,7 +102,7 @@ export default function AccountPage() {
     }
 
     return (
-        <div>
+        <div onClick={() => setMenuOpen(false)} style={{height: "100%"}}>
             {loading ? (<div>loading...</div>) :
                 (
                     <div>
