@@ -68,4 +68,20 @@ public interface PostRepository extends JpaRepository<Post, String>{
 			nativeQuery=true)
 	Optional<PostDto> findPostById(String id);
 	
+	@Query(value="""
+			SELECT 
+					a.account_id AS author_id, 
+					a.name AS author_name, 
+					p.post_id AS post_id, 
+					p.contents AS contents,
+					p.created_date AS created_date
+				FROM posts p
+				INNER JOIN accounts a
+				ON p.author_id = a.account_id
+				WHERE a.account_id = :account_id
+				ORDER BY p.created_date DESC;
+			""",
+			nativeQuery=true)
+	Page<PostDto> getPostsByAccountId(@Param("account_id") String accountId, Pageable pageble);
+	
 }

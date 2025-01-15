@@ -3,6 +3,7 @@ package com.takotyann.aisns.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,18 +14,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.takotyann.aisns.dtos.AccountDto;
+import com.takotyann.aisns.dtos.PostDto;
 import com.takotyann.aisns.entities.Account;
 import com.takotyann.aisns.services.AccountService;
+import com.takotyann.aisns.services.PostService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/accounts")
+@RequiredArgsConstructor
 public class AccountController {
 	
 	private final AccountService accountService;
-	
-	public AccountController(AccountService as) {
-		this.accountService = as;
-	}
+	private final PostService postService;
 	
 	@PostMapping("")
 	public ResponseEntity<String> signup(@RequestParam("email") String email, @RequestParam("name") String name, @RequestParam("password") String password) {
@@ -34,6 +37,11 @@ public class AccountController {
 	@GetMapping("/{accountId}")
 	public ResponseEntity<AccountDto> getAccount(@PathVariable String accountId) {
 		return ResponseEntity.ok(accountService.getAccountDtoById(accountId));
+	}
+	
+	@GetMapping("/{accountId}/posts")
+	public ResponseEntity<Page<PostDto>> getAccountPosts(@PathVariable String accountId) {
+		return ResponseEntity.ok(postService.getAccountPosts(accountId, 0));
 	}
 	
 	@PutMapping("/{accountId}/follow")

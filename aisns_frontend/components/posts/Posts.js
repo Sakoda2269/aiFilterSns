@@ -36,7 +36,7 @@ function ListPost({post}){
                 <span><Link href={"/accounts/" + aid} onClick={(e) => {e.stopPropagation()}}><h4>{aname}</h4></Link></span>
                 <span style={{paddingTop: "5px"}}>{date}&nbsp;{time}</span>
             </div>
-            <div style={{paddingLeft: "30px"}}>{contents}</div>
+            <div style={{paddingLeft: "30px", textAlign: "left"}}>{contents}</div>
             <br />
         </div>
     )

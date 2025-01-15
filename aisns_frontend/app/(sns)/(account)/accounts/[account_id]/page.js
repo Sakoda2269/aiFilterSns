@@ -1,5 +1,6 @@
 "use client"
 
+import Posts from "@/components/posts/Posts";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -19,6 +20,7 @@ export default function AccountPage() {
     const myAccount = serachParams.get("myaccount");
     const router = useRouter();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [posts, setPosts] = useState([])
 
     useEffect(() => {
         const getAccount = async () => {
@@ -41,9 +43,18 @@ export default function AccountPage() {
             setLoading(false)
         }
 
+        const getAccountPosts = async() => {
+            const res = await fetch("/api/accounts/" + params.account_id + "/posts", {method: "GET"})
+            if(res.ok) {
+                const data = await res.json();
+                setPosts(data);
+            }
+        }
+
         setAccountId(params.account_id);
         setId(sessionStorage.getItem("id"));
         getAccount();
+        getAccountPosts();
     }, [params, myAccount, router])
 
     const follow = async () => {
@@ -131,8 +142,9 @@ export default function AccountPage() {
                                         </span>
                                     </span>
                                 </div>
-                                <div>
-
+                                <div className="mt-3" style={{textAlign: "center"}}>
+                                    <h4>投稿一覧</h4>
+                                    <Posts posts={posts} />
                                 </div>
                             </div>
                         }

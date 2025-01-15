@@ -72,4 +72,8 @@ public class PostService {
 		}
 	}
 	
+	public Page<PostDto> getAccountPosts(String aid, int page) {
+		return postRepository.getPostsByAccountId(aid, PageRequest.of(page, 10));
+	}
+	
 }
