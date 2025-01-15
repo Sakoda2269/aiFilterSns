@@ -23,9 +23,12 @@ export default function Layout({ children }) {
                     <div style={{ padding: "10px" }}>
                         <Link href="/home"><button className="btn"><FaHome size={30} /></button></Link>
                     </div>
-                    <div style={{ padding: "10px" }}>
+                    {id == "" ? (<div style={{ padding: "10px" }}>
                         <Link href={"/accounts/" + id + "?myaccount=true"}><button className="btn"><FaCircleUser size={30} /></button></Link>
-                    </div>
+                    </div>) : 
+                    (<div style={{ padding: "10px" }}>
+                        <Link href={"/login"}><button className="btn"><FaCircleUser size={30} /></button></Link>
+                    </div>)}
                 </div>
                 <div className="col-9">
                     {children}
