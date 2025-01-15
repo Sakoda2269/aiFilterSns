@@ -1,5 +1,7 @@
 package com.takotyann.aisns.repositories;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -49,4 +51,21 @@ public interface PostRepository extends JpaRepository<Post, String>{
 		nativeQuery=true
 	)
 	Page<PostDto> getAllPost(Pageable pageable);
+	
+	@Query(
+			value="""
+					SELECT 
+					a.account_id AS author_id, 
+					a.name AS author_name, 
+					p.post_id AS post_id, 
+					p.contents AS contents,
+					p.created_date AS created_date
+				FROM posts p
+				INNER JOIN accounts a
+				ON p.author_id = a.account_id
+				WHERE p.post_id = :id;
+					""",
+			nativeQuery=true)
+	Optional<PostDto> findPostById(String id);
+	
 }

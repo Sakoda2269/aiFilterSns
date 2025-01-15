@@ -19,7 +19,7 @@ export default function Layout({ children }) {
                 hello
             </header> */}
             <div className="row">
-                <div className="col-1 container mt-3" style={{ display: "flex", flexDirection: "column", borderRight: "1px solid black", height: "100vh", alignItems: "center" }}>
+                <div className="col-1 container mt-3" style={{ display: "flex", flexDirection: "column", borderRight: "1px solid black", height: "95vh", alignItems: "center" }}>
                     <div style={{ padding: "10px" }}>
                         <Link href="/home"><button className="btn"><FaHome size={30} /></button></Link>
                     </div>
