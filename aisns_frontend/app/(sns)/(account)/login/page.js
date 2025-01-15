@@ -27,7 +27,7 @@ export default function Login() {
         });
         if(res.ok) {
             const data = await res.text();
-            localStorage.setItem("id", data);
+            sessionStorage.setItem("id", data);
             router.push("/accounts/" + data);
         } else {
             setError("メールアドレスまたはパスワードが違います");

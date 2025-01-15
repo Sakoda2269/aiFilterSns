@@ -40,3 +40,9 @@ a {
     color-scheme: dark;
   }
 }
+
+.lr {
+  display: flex;
+  justify-content: space-between;
+}
+
