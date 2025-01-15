@@ -64,7 +64,9 @@ public class SecurityConfig {
 		)
 		.authorizeHttpRequests(authz ->
 			authz.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/login")).permitAll()
-			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/accounts/signup")).permitAll()
+			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/logout")).permitAll()
+			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/accounts")).permitAll()
+			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/accounts/*")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/posts")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/posts/*")).permitAll()
 			.anyRequest().authenticated()

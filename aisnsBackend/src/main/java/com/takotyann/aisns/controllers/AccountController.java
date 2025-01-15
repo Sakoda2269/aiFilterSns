@@ -26,7 +26,7 @@ public class AccountController {
 		this.accountService = as;
 	}
 	
-	@PostMapping("/signup")
+	@PostMapping("")
 	public ResponseEntity<String> signup(@RequestParam("email") String email, @RequestParam("name") String name, @RequestParam("password") String password) {
 		return ResponseEntity.ok(accountService.registerAccount(email, name, password));
 	}

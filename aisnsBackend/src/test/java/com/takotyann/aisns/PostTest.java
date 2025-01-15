@@ -24,7 +24,7 @@ public class PostTest {
 	@Test
 	public void createAccountAndPost() throws Exception {
 		mockMvc.perform(
-				post("/api/accounts/signup")
+				post("/api/accounts")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("email", "test@gmail.com")
 				.param("name", "sakoda")

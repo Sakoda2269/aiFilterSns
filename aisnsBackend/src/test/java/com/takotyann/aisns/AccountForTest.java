@@ -35,7 +35,7 @@ public class AccountForTest {
 		this.password = password;
 		this.mockMvc = mock;
 		MvcResult res = mockMvc.perform(
-				post("/api/accounts/signup")
+				post("/api/accounts")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("email", email)
 				.param("name", name)

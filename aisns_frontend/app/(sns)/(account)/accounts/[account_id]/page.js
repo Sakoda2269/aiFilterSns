@@ -75,6 +75,16 @@ export default function AccountPage() {
         }
     }
 
+    const logout = async (e) => {
+        e.stopPropagation();
+        sessionStorage.removeItem("id");
+        const res = await fetch("/api/logout", {
+            method: "POST",
+            credentials: "same-origin"
+        })
+        router.push("/home")
+    }
+
     const openMenu = (e) => {
         e.stopPropagation();
         setMenuOpen(!menuOpen)
@@ -109,7 +119,7 @@ export default function AccountPage() {
                                             {menuOpen && <div className="border rounded border-secondary"
                                                 style={{ position: "absolute", left: "-130px", top: "20px", background: "white", padding: "1px" }}>
                                                 {accountId == id && <div>
-                                                    <button className="btn btn-light" style={{padding: "5px 10px", width: "150px" }}>ログアウト</button>
+                                                    <button className="btn btn-light" style={{padding: "5px 10px", width: "150px" }} onClick={logout}>ログアウト</button>
                                                 </div>}
                                                 <div>
                                                     <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }}>通報</button>

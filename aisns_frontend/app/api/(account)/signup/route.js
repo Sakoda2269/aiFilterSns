@@ -7,7 +7,7 @@ export async function POST(req) {
     formParams.append("email", body.email);
     formParams.append("name", body.name);
     formParams.append("password", body.password);
-    const res = await fetch(URL_PREFIX + "/accounts/signup", {
+    const res = await fetch(URL_PREFIX + "/accounts", {
         method: "POST",
         body:formParams.toString(),
         headers: { "Content-Type": "application/x-www-form-urlencoded" }
