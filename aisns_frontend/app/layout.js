@@ -22,25 +22,7 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en">
             <body className={`${geistSans.variable} ${geistMono.variable}`}>
-                <header style={{ background: "gray", height: "5%" }}>
-                    hello
-                </header>
-                <div className="row">
-                    <div className="col-1 container mt-3" style={{ display: "flex", flexDirection: "column", borderRight: "1px solid black", height: "100vh" }}>
-                        <div style={{padding: "10px"}}>
-                            <Link href="/home"><button>home</button></Link>
-                        </div>
-                        <div style={{padding: "10px"}}>
-                            <button>account</button>
-                        </div>
-                    </div>
-                    <div className="col-9">
-                        {children}
-                    </div>
-                    <div className="col-2">
-
-                    </div>
-                </div>
+                {children}
             </body>
         </html>
     );

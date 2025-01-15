@@ -21,7 +21,7 @@ export default function Home() {
     }
 
     const getFollowPost = async () => {
-        const res = await fetch("/api/posts/follow", { method: "GET", credentials: "include"})
+        const res = await fetch("/api/posts/follow", { method: "GET", credentials: "include" })
         if (res.ok) {
             const data = await res.json();
             setFollowPosts(data);
@@ -39,7 +39,7 @@ export default function Home() {
     }, [])
 
     const reload = () => {
-        if(tabKey == "all") {
+        if (tabKey == "all") {
             getAllPost();
         } else if (tabKey == "follow") {
             getFollowPost();
@@ -49,12 +49,12 @@ export default function Home() {
 
     const tabSelect = (k) => {
         setTabKey(k);
-        if(k == "all") {
-            if(posts.length == 0) {
+        if (k == "all") {
+            if (posts.length == 0) {
                 getAllPost();
             }
-        } else if(k == "follow") {
-            if(followPosts.length == 0) {
+        } else if (k == "follow") {
+            if (followPosts.length == 0) {
                 getFollowPost();
             }
         }
@@ -63,16 +63,19 @@ export default function Home() {
     return (
         <div>
             {id != "" ? <div>
+                <div className="mt-3" style={{textAlign: "center"}}>
+                    <h3>TimeLine</h3>
+                </div>
+                <PostSender reload={reload} />
                 <Tabs
                     id="post-tabs"
                     activeKey={tabKey}
-                    onSelect={k => tabSelect(k)}>
+                    onSelect={k => tabSelect(k)}
+                    justify>
                     <Tab eventKey="all" title="すべて">
-                        <PostSender reload={reload}/>
                         <Posts posts={posts} />
                     </Tab>
                     <Tab eventKey="follow" title="フォロー中">
-                        <PostSender reload={reload}/>
                         <Posts posts={followPosts} />
                     </Tab>
                 </Tabs>
