@@ -66,6 +66,7 @@ public class SecurityConfig {
 			authz.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/login")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/accounts/signup")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/posts")).permitAll()
+			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/posts/*")).permitAll()
 			.anyRequest().authenticated()
 		)
 		.addFilter(new JwtCreateFilter(authManager))
