@@ -63,7 +63,7 @@ export default function Home() {
     return (
         <div>
             {id != "" ? <div>
-                <div className="mt-3" style={{textAlign: "center"}}>
+                <div className="mt-3" style={{ textAlign: "center" }}>
                     <h3>TimeLine</h3>
                 </div>
                 <PostSender reload={reload} />
@@ -79,7 +79,13 @@ export default function Home() {
                         <Posts posts={followPosts} />
                     </Tab>
                 </Tabs>
-            </div> : <Posts posts={posts} />}
+            </div> :
+                <div>
+                    <div className="mt-3" style={{ textAlign: "center" }}>
+                        <h3>TimeLine</h3>
+                    </div>
+                    <Posts posts={posts} />
+                </div>}
         </div>
     )
 }

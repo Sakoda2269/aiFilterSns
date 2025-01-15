@@ -24,7 +24,7 @@ export default function Layout({ children }) {
                         <Link href="/home"><button className="btn"><FaHome size={30} /></button></Link>
                     </div>
                     <div style={{ padding: "10px" }}>
-                        <Link href={"/accounts/" + id}><button className="btn"><FaCircleUser size={30} /></button></Link>
+                        <Link href={"/accounts/" + id + "?myaccount=true"}><button className="btn"><FaCircleUser size={30} /></button></Link>
                     </div>
                 </div>
                 <div className="col-9">
