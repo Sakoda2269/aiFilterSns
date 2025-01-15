@@ -4,14 +4,20 @@ import { useEffect, useState } from "react";
 
 import { FaCircleUser } from "react-icons/fa6";
 import { FaHome } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function Layout({ children }) {
 
-    const [id, setId] = useState("");
+    const router = useRouter();
 
-    useEffect(() => {
-        setId(sessionStorage.getItem("id"));
-    }, [])
+    const accountPage = () => {
+        const id = sessionStorage.getItem("id")
+        if(id != null) {
+            router.push("/accounts/" + id + "?myaccount=true")
+        } else {
+            router.push("/login")
+        }
+    }
 
     return (
         <div>
@@ -23,12 +29,9 @@ export default function Layout({ children }) {
                     <div style={{ padding: "10px" }}>
                         <Link href="/home"><button className="btn"><FaHome size={30} /></button></Link>
                     </div>
-                    {id == "" ? (<div style={{ padding: "10px" }}>
-                        <Link href={"/accounts/" + id + "?myaccount=true"}><button className="btn"><FaCircleUser size={30} /></button></Link>
-                    </div>) : 
-                    (<div style={{ padding: "10px" }}>
-                        <Link href={"/login"}><button className="btn"><FaCircleUser size={30} /></button></Link>
-                    </div>)}
+                    <div style={{ padding: "10px" }}>
+                       <button className="btn" onClick={accountPage}><FaCircleUser size={30} /></button>
+                    </div>
                 </div>
                 <div className="col-9">
                     {children}
