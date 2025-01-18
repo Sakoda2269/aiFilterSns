@@ -22,11 +22,13 @@ public class LikeTest {
 		AccountForTest account3 = new AccountForTest("jdsffdsjka3", "sakoda3", "fdjsjfdksajkfds", mockMvc);
 		
 		String pid1 = account1.posts("hello world");
-		account3.posts("good day");
+		String pid2 = account3.posts("good day");
 		account2.like(pid1);
-		account2.follow(account1);
+		account2.like(pid2);
+		account1.like(pid2);
+		account3.like(pid2);
 		System.out.println(account2.getLikedPosts());
-		assertEquals(account2.getLikedPosts().size(), 1);
+		assertEquals(2, account2.getLikedPosts().size());
 		for(var post : account2.getTimeLine()) {
 			System.out.println(post);
 		}
