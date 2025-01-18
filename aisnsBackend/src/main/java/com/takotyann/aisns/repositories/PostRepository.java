@@ -20,10 +20,16 @@ public interface PostRepository extends JpaRepository<Post, String>{
 						a.name AS author_name, 
 						p.post_id AS post_id, 
 						p.contents AS contents,
-						p.created_date AS created_date 
+						p.created_date AS created_date,
+						CASE 
+							WHEN l.account_id IS NOT NULL THEN true
+							ELSE false
+						END AS liked
 					FROM posts p 
 					INNER JOIN accounts a
 					ON p.author_id = a.account_id
+					LEFT OUTER JOIN likes l
+					ON p.post_id = l.post_id AND l.account_id = :account_id
 					WHERE p.author_id IN (
 						SELECT account_id
 						FROM follows
@@ -53,20 +59,65 @@ public interface PostRepository extends JpaRepository<Post, String>{
 	Page<PostDto> getAllPost(Pageable pageable);
 	
 	@Query(
+		value="""
+				SELECT 
+					a.account_id AS author_id, 
+					a.name AS author_name, 
+					p.post_id AS post_id, 
+					p.contents AS contents,
+					p.created_date AS created_date,
+					CASE 
+						WHEN l.account_id IS NOT NULL THEN true
+						ELSE false
+					END AS liked
+				FROM posts p
+				INNER JOIN accounts a
+				ON p.author_id = a.account_id
+				LEFT OUTER JOIN likes l
+				ON p.post_id = l.post_id AND l.account_id = :account_id
+				ORDER BY p.created_date DESC;
+				""",
+				nativeQuery = true
+	)
+	Page<PostDto> getAllPost(@Param("account_id") String accountId, Pageable pageable);
+	
+	@Query(
 			value="""
 					SELECT 
 					a.account_id AS author_id, 
 					a.name AS author_name, 
 					p.post_id AS post_id, 
 					p.contents AS contents,
-					p.created_date AS created_date
+					p.created_date AS created_date,
 				FROM posts p
 				INNER JOIN accounts a
 				ON p.author_id = a.account_id
-				WHERE p.post_id = :id;
+				WHERE p.post_id = :post_id;
 					""",
 			nativeQuery=true)
-	Optional<PostDto> findPostById(String id);
+	Optional<PostDto> findPostById(@Param("post_id")String id);
+	
+	@Query(
+			value="""
+					SELECT 
+					a.account_id AS author_id, 
+					a.name AS author_name, 
+					p.post_id AS post_id, 
+					p.contents AS contents,
+					p.created_date AS created_date,
+					CASE 
+						WHNE l.account_id IS NOT NULL THEN true
+						ELSE false
+					END AS liked
+				FROM posts p
+				INNER JOIN accounts a
+				ON p.author_id = a.account_id
+				LEFT OUTER JOIN likes l
+				ON p.post_id = l.post_id AND l.account_id = :account_id
+				WHERE p.post_id = :post_id;
+					""",
+			nativeQuery=true)
+	Optional<PostDto> findPostById(@Param("post_id")String id, @Param("account_id")String accountId);
 	
 	@Query(value="""
 			SELECT 
@@ -83,5 +134,27 @@ public interface PostRepository extends JpaRepository<Post, String>{
 			""",
 			nativeQuery=true)
 	Page<PostDto> getPostsByAccountId(@Param("account_id") String accountId, Pageable pageble);
+	
+	@Query(value="""
+			SELECT 
+					a.account_id AS author_id, 
+					a.name AS author_name, 
+					p.post_id AS post_id, 
+					p.contents AS contents,
+					p.created_date AS created_date
+					CASE 
+						WHEN l.account_id IS NOT NULL THEN true
+						ELSE false
+					END AS liked
+				FROM posts p
+				INNER JOIN accounts a
+				ON p.author_id = a.account_id
+				LEFT OUTER JOIN likes l
+				ON p.post_id = l.post_id AND l.account_id = :getter_id
+				WHERE a.account_id = :account_id
+				ORDER BY p.created_date DESC;
+			""",
+			nativeQuery=true)
+	Page<PostDto> getPostsByAccountId(@Param("account_id") String accountId, @Param("getter_id") String getterId, Pageable pageble);
 	
 }
