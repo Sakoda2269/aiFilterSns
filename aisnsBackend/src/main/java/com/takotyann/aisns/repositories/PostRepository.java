@@ -48,7 +48,8 @@ public interface PostRepository extends JpaRepository<Post, String>{
 					a.name AS author_name, 
 					p.post_id AS post_id, 
 					p.contents AS contents,
-					p.created_date AS created_date
+					p.created_date AS created_date,
+					FALSE AS liked
 				FROM posts p
 				INNER JOIN accounts a
 				ON p.author_id = a.account_id
@@ -89,6 +90,7 @@ public interface PostRepository extends JpaRepository<Post, String>{
 					p.post_id AS post_id, 
 					p.contents AS contents,
 					p.created_date AS created_date,
+					FALSE AS liked
 				FROM posts p
 				INNER JOIN accounts a
 				ON p.author_id = a.account_id
@@ -125,7 +127,8 @@ public interface PostRepository extends JpaRepository<Post, String>{
 					a.name AS author_name, 
 					p.post_id AS post_id, 
 					p.contents AS contents,
-					p.created_date AS created_date
+					p.created_date AS created_date,
+					FALSE AS liked
 				FROM posts p
 				INNER JOIN accounts a
 				ON p.author_id = a.account_id
@@ -141,7 +144,7 @@ public interface PostRepository extends JpaRepository<Post, String>{
 					a.name AS author_name, 
 					p.post_id AS post_id, 
 					p.contents AS contents,
-					p.created_date AS created_date
+					p.created_date AS created_date,
 					CASE 
 						WHEN l.account_id IS NOT NULL THEN true
 						ELSE false

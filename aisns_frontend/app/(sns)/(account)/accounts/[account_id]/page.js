@@ -44,7 +44,7 @@ export default function AccountPage() {
         }
 
         const getAccountPosts = async() => {
-            const res = await fetch("/api/accounts/" + params.account_id + "/posts", {method: "GET"})
+            const res = await fetch("/api/accounts/" + params.account_id + "/posts", {method: "GET", credentials: "same-origin"})
             if(res.ok) {
                 const data = await res.json();
                 setPosts(data);
