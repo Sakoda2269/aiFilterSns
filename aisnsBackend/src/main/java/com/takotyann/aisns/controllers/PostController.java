@@ -81,15 +81,4 @@ public class PostController {
 		return ResponseEntity.status(401).body(null);
 	}
 	
-	@GetMapping("/likes")
-	public ResponseEntity<Page<PostDto>> getLikedPosts(@RequestParam(name="page", defaultValue="0") int pageNum) {
-		Account account = accountService.getLoginedAccount();
-		if(account != null) {
-			return ResponseEntity.ok(postService.getLikedPosts(account, 0));
-		}
-		return ResponseEntity.status(401).body(null);
-	}
-	
-	
-	
 }

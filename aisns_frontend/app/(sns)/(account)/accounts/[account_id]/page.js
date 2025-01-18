@@ -4,6 +4,7 @@ import Posts from "@/components/posts/Posts";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Tab, Tabs } from "react-bootstrap";
 
 export default function AccountPage() {
 
@@ -21,16 +22,27 @@ export default function AccountPage() {
     const router = useRouter();
     const [menuOpen, setMenuOpen] = useState(false);
     const [posts, setPosts] = useState([])
+    const [likePosts, setLikePosts] = useState([]);
+    const [tabKey, setTabKey] = useState("all");
+    const [isChanged, setIsChange] = useState(false)
+
+    const getAccountPosts = async () => {
+        const res = await fetch("/api/accounts/" + params.account_id + "/posts", { method: "GET", credentials: "same-origin" })
+        if (res.ok) {
+            const data = await res.json();
+            setPosts(data);
+        }
+    }
+
+    const getLikePosts = async () => {
+        const res = await fetch("/api/accounts/" + params.account_id + "/posts/likes", { method: "GET", credentials: "same-origin" })
+        if (res.ok) {
+            const data = await res.json();
+            setLikePosts(data);
+        }
+    }
 
     useEffect(() => {
-        
-        const getAccountPosts = async () => {
-            const res = await fetch("/api/accounts/" + params.account_id + "/posts", { method: "GET", credentials: "same-origin" })
-            if (res.ok) {
-                const data = await res.json();
-                setPosts(data);
-            }
-        }
         const getAccount = async () => {
             const res = await fetch("/api/accounts/" + params.account_id, {
                 method: "GET",
@@ -54,9 +66,23 @@ export default function AccountPage() {
         setAccountId(params.account_id);
         setId(sessionStorage.getItem("id"));
         getAccountPosts();
+        getLikePosts();
     }, [params, myAccount, router])
 
-    
+    const tabSelect = (k) => {
+        setTabKey(k)
+        if(k == "all") {
+            if(isChanged) {
+                getAccountPosts();
+                setIsChange(false);
+            }
+        } else if(k == "like") {
+            if(isChanged) {
+                getLikePosts();
+                setIsChange(false);
+            }
+        }
+    }
 
     const openMenu = (e) => {
         e.stopPropagation();
@@ -82,10 +108,18 @@ export default function AccountPage() {
                                     setFollowing = {setFollowing}
                                     setFollowerNum={setFollowerNum}
                                     />
-                                <div className="mt-3" style={{ textAlign: "center" }}>
-                                    <h4>投稿一覧</h4>
-                                    <Posts posts={posts} />
-                                </div>
+                                <Tabs
+                                    id="post-tabs"
+                                    activeKey={tabKey}
+                                    onSelect={k => tabSelect(k)}
+                                    justify>
+                                    <Tab eventKey="all" title="自分の投稿">
+                                        <Posts posts={posts} reload={() => setIsChange(true)}/>
+                                    </Tab>
+                                    <Tab eventKey="like" title="イイねした投稿">
+                                        <Posts posts={likePosts} reload={() => setIsChange(true)}/>
+                                    </Tab>
+                                </Tabs>
                             </div>
                         }
                         {statusCode == 404 &&

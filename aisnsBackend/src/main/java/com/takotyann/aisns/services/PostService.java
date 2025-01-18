@@ -49,8 +49,8 @@ public class PostService {
 		return tmp;
 	}
 	
-	public Page<PostDto> getLikedPosts(Account account, int page) {
-		return postRepository.getLikedPost(account.getAccountId(), PageRequest.of(page, 10));
+	public Page<PostDto> getLikedPosts(String accountId, int page) {
+		return postRepository.getLikedPost(accountId, PageRequest.of(page, 10));
 	}
 	
 	public PostDto getPost(String pid) {
