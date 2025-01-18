@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.takotyann.aisns.dtos.PostDto;
 import com.takotyann.aisns.entities.Account;
 import com.takotyann.aisns.services.AccountService;
+import com.takotyann.aisns.services.LikeService;
 import com.takotyann.aisns.services.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class PostController {
 	
 	private final AccountService accountService;
 	private final PostService postService;
+	private final LikeService likeService;
 	
 	@GetMapping("")
 	public ResponseEntity<Page<PostDto>> getTimeline(@RequestParam(name = "page", defaultValue="0") int pageNum) {
@@ -54,6 +56,17 @@ public class PostController {
 	public ResponseEntity<String> editPost(@PathVariable String pid, @RequestParam(name="contents") String contents) {
 		postService.editPost(pid, contents);
 		return ResponseEntity.ok("edit success");
+	}
+	
+	@PutMapping("/{pid}/like")
+	public ResponseEntity<String> likePost(@PathVariable String pid, @RequestParam(name="like") boolean like) {
+		if(like) {
+			likeService.like(pid);
+			return ResponseEntity.ok("like success");
+		} else {
+			likeService.unLike(pid);
+			return ResponseEntity.ok("unlike success");
+		}
 	}
 	
 	@GetMapping("/follows")
