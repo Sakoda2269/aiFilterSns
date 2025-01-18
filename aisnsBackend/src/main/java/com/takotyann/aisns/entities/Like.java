@@ -13,6 +13,8 @@ public class Like {
 	@EmbeddedId
 	private LikeId likeId;
 	
+	public Like(){}
+	
 	public Like(String aid, String pid) {
 		this.likeId = new LikeId(aid, pid);
 	}

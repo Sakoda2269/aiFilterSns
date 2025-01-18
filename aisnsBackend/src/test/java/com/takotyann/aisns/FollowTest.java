@@ -46,7 +46,7 @@ public class FollowTest {
 		correct.get(account3.getId()).add("good morning");
 		correct.get(account3.getId()).add("i am in Tokyo");
 		
-		var res = account1.getTimeLine();
+		var res = account1.getFollowTimeLine();
 		assertEquals(correct, res);
 	}
 	

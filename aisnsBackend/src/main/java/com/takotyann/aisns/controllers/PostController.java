@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.takotyann.aisns.dtos.PostDto;
 import com.takotyann.aisns.entities.Account;
+import com.takotyann.aisns.exceptions.LoginRequireException;
 import com.takotyann.aisns.services.AccountService;
 import com.takotyann.aisns.services.LikeService;
 import com.takotyann.aisns.services.PostService;
@@ -34,11 +35,13 @@ public class PostController {
 	}
 	
 	@PostMapping("")
-	public void post(@RequestParam("contents") String contents) {
+	public ResponseEntity<String> post(@RequestParam("contents") String contents) {
 		Account account = accountService.getLoginedAccount();
-		if(account != null) {
-			postService.post(account, contents);
+		if(account == null) {
+			throw new LoginRequireException("unauthorized");
 		}
+		String id = postService.post(account, contents);
+		return ResponseEntity.ok(id);
 	}
 	
 	@GetMapping("/{pid}")
@@ -74,6 +77,15 @@ public class PostController {
 		Account account = accountService.getLoginedAccount();
 		if(account != null) {
 			return ResponseEntity.ok(postService.getFollowTimeline(account, 0));
+		}
+		return ResponseEntity.status(401).body(null);
+	}
+	
+	@GetMapping("/likes")
+	public ResponseEntity<Page<PostDto>> getLikedPosts(@RequestParam(name="page", defaultValue="0") int pageNum) {
+		Account account = accountService.getLoginedAccount();
+		if(account != null) {
+			return ResponseEntity.ok(postService.getLikedPosts(account, 0));
 		}
 		return ResponseEntity.status(401).body(null);
 	}

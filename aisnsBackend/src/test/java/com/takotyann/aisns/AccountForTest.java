@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -47,7 +48,7 @@ public class AccountForTest {
 		login();
 	}
 	 
-	public void login() throws Exception {
+	private void login() throws Exception {
 		MvcResult  res = mockMvc.perform(
 				post("/api/login")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -71,17 +72,19 @@ public class AccountForTest {
 			.andExpect(status().isOk());
 	}
 	
-	public void posts(String contents) throws Exception {
-		mockMvc.perform(
+	public String posts(String contents) throws Exception {
+		MvcResult res = mockMvc.perform(
 				post("/api/posts")
 				.cookie(new Cookie("token", token))
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("contents", contents)
 			).andDo(print())
-			.andExpect(status().isOk());
+			.andExpect(status().isOk())
+			.andReturn();
+		return res.getResponse().getContentAsString();
 	}
 	
-	public Map<String, Set<String>> getTimeLine() throws Exception {
+	public Map<String, Set<String>> getFollowTimeLine() throws Exception {
 		Map<String, Set<String>> result = new HashMap<>();
 		MvcResult  res = mockMvc.perform(
 				get("/api/posts/follows")
@@ -101,4 +104,49 @@ public class AccountForTest {
 		}
 		return result;
 	}
+
+	public void like(String pid) throws Exception {
+		mockMvc.perform(
+				put("/api/posts/" + pid + "/like")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("like", "true")
+				.cookie(new Cookie("token", token))
+			).andDo(print())
+			.andExpect(status().isOk());
+	}
+	
+	public List<Map<String, String>> getLikedPosts() throws Exception {
+		List<Map<String, String>> result = new ArrayList<>();
+		MvcResult  res = mockMvc.perform(
+				get("/api/posts/likes")
+				.cookie(new Cookie("token", token))
+			).andDo(print())
+			.andExpect(status().isOk())
+			.andReturn();
+		Map<String, Object> body = mapper.readValue(res.getResponse().getContentAsString(), Map.class);
+		List<Object> contents = (List) body.get("content");
+		for(Object o : contents) {
+			Map<String, String> post = (Map) o;
+			result.add(post);
+		}
+		return result;
+	}
+
+	public List<Map<String, String>> getTimeLine() throws Exception {
+		List<Map<String, String>> result = new ArrayList<>();
+		MvcResult  res = mockMvc.perform(
+				get("/api/posts")
+				.cookie(new Cookie("token", token))
+			).andDo(print())
+			.andExpect(status().isOk())
+			.andReturn();
+		Map<String, Object> body = mapper.readValue(res.getResponse().getContentAsString(), Map.class);
+		List<Object> contents = (List) body.get("content");
+		for(Object o : contents) {
+			Map<String, String> post = (Map) o;
+			result.add(post);
+		}
+		return result;
+	}
+	
 }
