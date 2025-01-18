@@ -62,13 +62,13 @@ public class PostController {
 	}
 	
 	@PutMapping("/{pid}/like")
-	public ResponseEntity<String> likePost(@PathVariable String pid, @RequestParam(name="like") boolean like) {
+	public ResponseEntity<Integer> likePost(@PathVariable String pid, @RequestParam(name="like") boolean like) {
 		if(like) {
-			likeService.like(pid);
-			return ResponseEntity.ok("like success");
+			int count = likeService.like(pid);
+			return ResponseEntity.ok(count);
 		} else {
-			likeService.unLike(pid);
-			return ResponseEntity.ok("unlike success");
+			int count = likeService.unLike(pid);
+			return ResponseEntity.ok(count);
 		}
 	}
 	

@@ -9,6 +9,7 @@ export default function Post() {
     const params = useParams();
     const [post, setPost] = useState({});
     const [liked, setLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const [menuOpen, setMenuOpen] = useState(false);
     const [id, setId] = useState("");
@@ -26,6 +27,7 @@ export default function Post() {
                 const data = await res.json();
                 setPost(data);
                 setLiked(data.liked);
+                setLikeCount(data.likeCount);
                 setError("");
             } else {
                 if (res.status == 404) {
@@ -56,6 +58,10 @@ export default function Post() {
 
     const like = async (e) => {
         e.stopPropagation();
+        if(id == "" || id == null) {
+            router.push("/login")
+            return;
+        }
         const res = await fetch("/api/posts/" + pid + "/like", {
             method: "PUT",
             credentials: "same-origin",
@@ -63,12 +69,18 @@ export default function Post() {
             headers: { "Content-Type": "application/json" }
         });
         if(res.ok) {
+            const num = await res.text();
             setLiked(true);
+            setLikeCount(num);
         }
     }
 
     const unLike = async (e) => {
         e.stopPropagation();
+        if(id == ""  || id == null) {
+            router.push("/login")
+            return;
+        }
         const res = await fetch("/api/posts/" + pid + "/like", {
             method: "PUT",
             credentials: "same-origin",
@@ -76,7 +88,9 @@ export default function Post() {
             headers: { "Content-Type": "application/json" }
         });
         if(res.ok) {
+            const num = await res.text();
             setLiked(false);
+            setLikeCount(num);
         }
     }
 
@@ -109,8 +123,8 @@ export default function Post() {
                         </div>
                         <div style={{ textAlign: "left"}}>
                             {liked ?
-                                <button className="btn"><FaHeart color="red" onClick={unLike} /></button> :
-                                <button className="btn"><FaRegHeart onClick={like} /></button>
+                                <span><button className="btn"><FaHeart color="red" onClick={unLike} /></button>: {likeCount}</span> :
+                                <span><button className="btn"><FaRegHeart onClick={like} /></button>: {likeCount}</span>
                             }
                         </div>
                     </div>) :

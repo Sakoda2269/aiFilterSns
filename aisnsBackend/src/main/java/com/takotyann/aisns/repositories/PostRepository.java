@@ -133,7 +133,7 @@ public interface PostRepository extends JpaRepository<Post, String>{
 						post_id,
 						COUNT(1) AS like_count
 					FROM likes
-					WEHRE post_id = :post_id
+					WHERE post_id = :post_id
 					GROUP BY post_id
 				) AS like_count
 				USING(post_id)
@@ -167,7 +167,7 @@ public interface PostRepository extends JpaRepository<Post, String>{
 						post_id,
 						COUNT(1) AS like_count
 					FROM likes
-					WEHRE post_id = :post_id
+					WHERE post_id = :post_id
 					GROUP BY post_id
 				) AS like_count
 				USING(post_id)

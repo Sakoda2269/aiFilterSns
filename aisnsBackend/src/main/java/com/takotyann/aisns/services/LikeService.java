@@ -18,16 +18,17 @@ public class LikeService {
 	private final LikeRepository likeRepository;
 	private final AccountService accountService;
 	
-	public void like(String pid) {
+	public int like(String pid) {
 		Account account = accountService.getLoginedAccount();
 		if(account == null) {
 			throw new LoginRequireException("unAuthorized");
 		}
 		Like like = new Like(account.getAccountId(), pid);
 		likeRepository.save(like);
+		return likeRepository.countLikeByPostId(pid);
 	}
 	
-	public void unLike(String pid) {
+	public int unLike(String pid) {
 		Account account = accountService.getLoginedAccount();
 		if(account == null) {
 			throw new LoginRequireException("unAuthorized");
@@ -35,6 +36,7 @@ public class LikeService {
 		LikeId lid = new LikeId(account.getAccountId(), pid);
 		Like like = likeRepository.findById(lid).orElseThrow(() -> new PostNotFoundException("post not found"));
 		likeRepository.delete(like);
+		return likeRepository.countLikeByPostId(pid);
 	}
 	
 }

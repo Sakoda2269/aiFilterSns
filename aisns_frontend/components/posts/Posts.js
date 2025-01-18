@@ -21,6 +21,7 @@ function ListPost({post, reload}){
     const [created, setCreated] = useState(post.createdDate);
     const [liked, setLiked] = useState(post.liked);
     const [date, time] = getDate(created);
+    const [likeCount, setLikeCount] = useState(post.likeCount);
     const [mouseOver, setMouseOver] = useState(false);
     const router = useRouter();
 
@@ -31,6 +32,7 @@ function ListPost({post, reload}){
         setPid(post.postId);
         setCreated(post.createdDate);
         setLiked(post.liked);
+        setLikeCount(post.likeCount);
     }, [post])
 
     const jumpPostPage = (e) => {
@@ -47,7 +49,9 @@ function ListPost({post, reload}){
             headers: { "Content-Type": "application/json" }
         });
         if(res.ok) {
+            const num = await res.text();
             setLiked(true);
+            setLikeCount(num)
             if(reload) {
                 reload();
             }
@@ -63,7 +67,9 @@ function ListPost({post, reload}){
             headers: { "Content-Type": "application/json" }
         });
         if(res.ok) {
+            const num = await res.text();
             setLiked(false);
+            setLikeCount(num)
             if(reload) {
                 reload();
             }
@@ -83,8 +89,8 @@ function ListPost({post, reload}){
             <br />
             <div style={{textAlign: "left"}}>
                 {liked ? 
-                    <button className="btn"><FaHeart color="red" onClick={unLike}/></button> : 
-                    <button className="btn"><FaRegHeart onClick={like}/></button>
+                    <span><button className="btn" onClick={unLike} ><FaHeart color="red" size={20}/></button>: {likeCount}</span>:
+                    <span><button className="btn" onClick={like} ><FaRegHeart size={20}/></button>: {likeCount}</span>
                 }
             </div>
         </div>
