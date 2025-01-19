@@ -5,10 +5,15 @@ import { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa6";
 
-export default function Posts({posts, reload}) {
+export default function Posts({posts, reload, addPage, isLast}) {
     return (
         <div>
             {posts.map((value, index) => (<ListPost post={value} key={"post" + index} reload={reload}/>))}
+            <div>
+                {!isLast && (<div style={{padding: "30px"}}>
+                    <button className="btn btn-light border border-secondary" style={{width: "100%"}} onClick={addPage}>追加で読み込む</button>
+                </div>)}
+            </div>
         </div>
     )
 }  

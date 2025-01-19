@@ -76,7 +76,7 @@ public class PostController {
 	public ResponseEntity<Page<PostDto>> getFollowTimeline(@RequestParam(name = "page", defaultValue="0") int pageNum) {
 		Account account = accountService.getLoginedAccount();
 		if(account != null) {
-			return ResponseEntity.ok(postService.getFollowTimeline(account, 0));
+			return ResponseEntity.ok(postService.getFollowTimeline(account, pageNum));
 		}
 		return ResponseEntity.status(401).body(null);
 	}

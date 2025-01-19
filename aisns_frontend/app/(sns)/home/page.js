@@ -10,25 +10,59 @@ export default function Home() {
     const [id, setId] = useState("");
     const [tabKey, setTabKey] = useState("all");
     const [isPostChange, setIsPostChange] = useState(false);
+    const [allPostPageNum, setAllPostPageNum] = useState(0)
+    const [allPostLastPage, setAllPostLastPage] = useState(false);
+    const [followPostPageNum, setFollowPostPageNum] = useState(0);
+    const [followPostLastPage, setFollowPostLastPage] = useState(false);
 
 
     const getAllPost = async () => {
-        const res = await fetch("/api/posts", { method: "GET", credentials: "same-origin" })
+        const res = await fetch("/api/posts?page=0", { method: "GET", credentials: "same-origin" })
         if (res.ok) {
             const data = await res.json();
-            setPosts(data);
+            setPosts(data.posts);
+            setAllPostLastPage(data.last)
         } else {
             setPosts([]);
+            setAllPostLastPage(false)
         }
     }
 
     const getFollowPost = async () => {
-        const res = await fetch("/api/posts/follow", { method: "GET", credentials: "same-origin" })
+        const res = await fetch("/api/posts/follow?page=0", { method: "GET", credentials: "same-origin" })
         if (res.ok) {
             const data = await res.json();
-            setFollowPosts(data);
+            setFollowPosts(data.posts);
+            setFollowPostLastPage(data.last)
         } else {
             setFollowPosts([]);
+            setFollowPostLastPage(false)
+        }
+    }
+
+    const changePage = async() => {
+        const res = await fetch("/api/posts?page="+(allPostPageNum + 1), { method: "GET", credentials: "same-origin" })
+        if (res.ok) {
+            const data = await res.json();
+            setPosts(prev => (
+                [...prev, ...data.posts]
+            ));
+            setAllPostPageNum(p => p + 1);
+            setAllPostLastPage(data.last)
+        } else {
+        }
+    }
+
+    const changeFollowPage = async() => {
+        const res = await fetch("/api/posts/follow?page="+(followPostPageNum + 1), { method: "GET", credentials: "same-origin" })
+        if (res.ok) {
+            const data = await res.json();
+            setFollowPosts(prev => (
+                [...prev, ...data.posts]
+            ));
+            setFollowPostPageNum(p => p + 1);
+            setFollowPostLastPage(data.last)
+        } else {
         }
     }
 
@@ -86,10 +120,10 @@ export default function Home() {
                     onSelect={k => tabSelect(k)}
                     justify>
                     <Tab eventKey="all" title="すべて">
-                        <Posts posts={posts}  reload={postChanges}/>
+                        <Posts posts={posts}  reload={postChanges} addPage={changePage} isLast={allPostLastPage}/>
                     </Tab>
                     <Tab eventKey="follow" title="フォロー中">
-                        <Posts posts={followPosts}  reload={postChanges}/>
+                        <Posts posts={followPosts}  reload={postChanges} addPage={changeFollowPage} isLast={followPostLastPage}/>
                     </Tab>
                 </Tabs>
             </div> :
@@ -97,7 +131,7 @@ export default function Home() {
                     <div className="mt-3" style={{ textAlign: "center" }}>
                         <h3>TimeLine</h3>
                     </div>
-                    <Posts posts={posts}/>
+                    <Posts posts={posts} addPage={changePage} isLast={allPostLastPage}/>
                 </div>}
         </div>
     )

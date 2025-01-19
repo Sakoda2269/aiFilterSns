@@ -26,19 +26,54 @@ export default function AccountPage() {
     const [tabKey, setTabKey] = useState("all");
     const [isChanged, setIsChange] = useState(false)
 
+    const [accountPostPageNum, setAccountPostPageNum] = useState(0)
+    const [accountPostLastPage, setAccountPostLastPage] = useState(false);
+    const [accountLikedPostPageNum, setAccountLikedPostPageNum] = useState(0);
+    const [accountLikedPostLastPage, setAccountLikedPostLastpage] = useState(false);
+
     const getAccountPosts = async () => {
-        const res = await fetch("/api/accounts/" + params.account_id + "/posts", { method: "GET", credentials: "same-origin" })
+        const res = await fetch("/api/accounts/" + params.account_id + "/posts?page=0", { method: "GET", credentials: "same-origin" })
         if (res.ok) {
             const data = await res.json();
-            setPosts(data);
+            setPosts(data.posts);
+            setAccountPostLastPage(data.last)
+        } else {
+            setPosts([])
+            setAccountPostLastPage(false)
         }
     }
 
     const getLikePosts = async () => {
-        const res = await fetch("/api/accounts/" + params.account_id + "/posts/likes", { method: "GET", credentials: "same-origin" })
+        const res = await fetch("/api/accounts/" + params.account_id + "/posts/likes?page=0", { method: "GET", credentials: "same-origin" })
         if (res.ok) {
             const data = await res.json();
-            setLikePosts(data);
+            setLikePosts(data.posts);
+            setAccountLikedPostLastpage(data.last)
+        } else {
+            setLikePosts([]);
+            setAccountLikedPostLastpage(false)
+        }
+    }
+
+    const addAccountPostPage = async () => {
+        const res = await fetch("/api/accounts/" + params.account_id + "/posts?page=" + (accountPostPageNum + 1), { method: "GET", credentials: "same-origin" })
+        if (res.ok) {
+            const data = await res.json();
+            setPosts(p => [...p, ...data.posts]);
+            setAccountPostPageNum(p => p + 1)
+            setAccountPostLastPage(data.last)
+        } else {
+        }
+    }
+
+    const addLikedPostPage = async() => {
+        const res = await fetch("/api/accounts/" + params.account_id + "/posts/likes?page=" + (accountLikedPostPageNum + 1), { method: "GET", credentials: "same-origin" })
+        if (res.ok) {
+            const data = await res.json();
+            setLikePosts(p => [...p, ...data.posts]);
+            setAccountLikedPostPageNum(p => p + 1)
+            setAccountLikedPostLastpage(data.last)
+        } else {
         }
     }
 
@@ -114,10 +149,10 @@ export default function AccountPage() {
                                     onSelect={k => tabSelect(k)}
                                     justify>
                                     <Tab eventKey="all" title="自分の投稿">
-                                        <Posts posts={posts} reload={() => setIsChange(true)}/>
+                                        <Posts posts={posts} reload={() => setIsChange(true)} addPage={addAccountPostPage} isLast={accountPostLastPage}/>
                                     </Tab>
                                     <Tab eventKey="like" title="イイねした投稿">
-                                        <Posts posts={likePosts} reload={() => setIsChange(true)}/>
+                                        <Posts posts={likePosts} reload={() => setIsChange(true)} addPage={addLikedPostPage} isLast={accountLikedPostLastPage}/>
                                     </Tab>
                                 </Tabs>
                             </div>

@@ -40,8 +40,8 @@ public class AccountController {
 	}
 	
 	@GetMapping("/{accountId}/posts")
-	public ResponseEntity<Page<PostDto>> getAccountPosts(@PathVariable String accountId) {
-		return ResponseEntity.ok(postService.getAccountPosts(accountId, 0));
+	public ResponseEntity<Page<PostDto>> getAccountPosts(@PathVariable String accountId, @RequestParam(name="page", defaultValue="0") int pageNum) {
+		return ResponseEntity.ok(postService.getAccountPosts(accountId, pageNum));
 	}
 	
 	@GetMapping("/{accountId}/posts/likes")

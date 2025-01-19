@@ -36,6 +36,10 @@ public interface PostRepository extends JpaRepository<Post, String>{
 				USING(post_id)
 				ORDER BY p.created_date DESC;
 				""",
+				countQuery="""
+						SELECT COUNT(*)
+						FROM posts p
+						""",
 		nativeQuery=true
 	)
 	Page<PostDto> getAllPost(Pageable pageable);
@@ -67,9 +71,13 @@ public interface PostRepository extends JpaRepository<Post, String>{
 					FROM likes
 					GROUP BY post_id
 				) AS like_count
-				USING(post_id)
+				ON p.post_id = like_count.post_id
 				ORDER BY p.created_date DESC;
 				""",
+				countQuery="""
+						SELECT COUNT(*)
+						FROM posts p
+						""",
 				nativeQuery = true
 	)
 	Page<PostDto> getAllPost(@Param("account_id") String accountId, Pageable pageable);
@@ -111,6 +119,16 @@ public interface PostRepository extends JpaRepository<Post, String>{
 						p.author_id = :account_id
 					ORDER BY p.created_date DESC;
 					""",
+					countQuery="""
+							SELECT COUNT(*)
+							FROM posts p
+							WHERE p.author_id IN  (
+								SELECT account_id
+								FROM follows
+								WHERE follower_id = :account_id
+							) OR
+							p.author_id = :account_id
+							""",
 			nativeQuery=true
 			)
 	Page<PostDto> getFollowedPost(@Param("account_id") String accountId, Pageable pageable);
@@ -139,6 +157,16 @@ public interface PostRepository extends JpaRepository<Post, String>{
 				USING(post_id)
 				WHERE p.post_id = :post_id;
 					""",
+				countQuery= """
+						SELECT COUNT(*)
+						FROM posts p
+						WHERE p.author_id IN  (
+							SELECT account_id
+							FROM follows
+							WHERE follower_id = :account_id
+						) OR
+						p.author_id = :account_id
+						""",
 			nativeQuery=true)
 	Optional<PostDto> findPostById(@Param("post_id")String id);
 	
@@ -177,29 +205,33 @@ public interface PostRepository extends JpaRepository<Post, String>{
 	Optional<PostDto> findPostById(@Param("post_id")String id, @Param("account_id")String accountId);
 	
 	@Query(value="""
-				SELECT 
-					a.account_id AS author_id, 
-					a.name AS author_name, 
-					p.post_id AS post_id, 
-					p.contents AS contents,
-					p.created_date AS created_date,
-					FALSE AS liked,
-					COALESCE(like_count.like_count, 0) AS like_count
-				FROM posts p
-				INNER JOIN accounts a
-				ON p.author_id = a.account_id
-				LEFT JOIN (
-					SELECT
-						post_id,
-						COUNT(1) AS like_count
-					FROM likes
-					WEHRE post_id = :post_id
-					GROUP BY post_id
-				) AS like_count
-				USING(post_id)
-				WHERE a.account_id = :account_id
-				ORDER BY p.created_date DESC;
+			SELECT 
+				a.account_id AS author_id, 
+				a.name AS author_name, 
+				p.post_id AS post_id, 
+				p.contents AS contents,
+				p.created_date AS created_date,
+				FALSE AS liked,
+				COALESCE(like_count.like_count, 0) AS like_count
+			FROM posts p
+			INNER JOIN accounts a
+			ON p.author_id = a.account_id
+			LEFT JOIN (
+				SELECT
+					post_id,
+					COUNT(1) AS like_count
+				FROM likes
+				GROUP BY post_id
+			) AS like_count
+			USING(post_id)
+			WHERE p.author_id = :account_id
+			ORDER BY p.created_date DESC;
 			""",
+	countQuery="""
+		SELECT COUNT(*)
+		FROM posts p
+		WHERE p.author_id = :account_id
+		""",
 			nativeQuery=true)
 	Page<PostDto> getPostsByAccountId(@Param("account_id") String accountId, Pageable pageble);
 	
@@ -230,9 +262,14 @@ public interface PostRepository extends JpaRepository<Post, String>{
 					GROUP BY post_id
 				) AS like_count
 				USING(post_id)
-				WHERE a.account_id = :account_id
+				WHERE p.author_id = :account_id
 				ORDER BY p.created_date DESC;
 			""",
+			countQuery="""
+				SELECT COUNT(*)
+				FROM posts p
+				WHERE p.author_id = :account_id
+				""",
 			nativeQuery=true)
 	Page<PostDto> getPostsByAccountId(@Param("account_id") String accountId, @Param("getter_id") String getterId, Pageable pageble);
 
@@ -265,6 +302,16 @@ public interface PostRepository extends JpaRepository<Post, String>{
 					)
 				ORDER BY p.created_date DESC;
 			""",
+			countQuery="""
+				SELECT COUNT(*)
+				FROM posts p
+				WHERE 
+					p.post_id IN (
+							SELECT post_id
+							FROM likes
+							WHERE account_id = :account_id
+					)
+				""",
 			nativeQuery=true
 	)
 	Page<PostDto> getLikedPost(@Param("account_id") String accountId, Pageable pageable);

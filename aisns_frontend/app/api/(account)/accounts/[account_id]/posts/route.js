@@ -6,14 +6,17 @@ export async function GET(req, { params }) {
 
     const { account_id } = await params;
     const cookieStore = await cookies();
-    const res = await fetch(URL_PREFIX + "/accounts/" + account_id + "/posts", {
+    const queryParams = req.nextUrl.searchParams;
+    const pageNum = queryParams.get("page");
+    const res = await fetch(URL_PREFIX + "/accounts/" + account_id + "/posts?page=" + pageNum, {
         method: "GET",
         headers: {Cookie: cookieStore.toString()}
     });
     if (res.ok) {
         const data = await res.json();
         const posts = data.content;
-        return new Response(JSON.stringify(posts), { status: 200 });
+        const isLast = data.last
+        return new Response(JSON.stringify({posts:posts, last: isLast}), {status: 200})
     } else {
         return new Response("errro", { status: res.status });
     }
