@@ -36,7 +36,12 @@ public class PostService {
 	}
 	
 	public Page<PostDto> getTimeLine(int page) {
-		return postRepository.getAllPost(PageRequest.of(page, 10));
+		Account account = accountService.getLoginedAccount();
+		if(account == null) {
+			return postRepository.getAllPost(PageRequest.of(page, 10));
+		} else {
+			return postRepository.getAllPost(account.getAccountId(), PageRequest.of(page, 10));
+		}
 	}
 	
 	public Page<PostDto> getFollowTimeline(Account account, int page) {
@@ -44,8 +49,17 @@ public class PostService {
 		return tmp;
 	}
 	
+	public Page<PostDto> getLikedPosts(String accountId, int page) {
+		return postRepository.getLikedPost(accountId, PageRequest.of(page, 10));
+	}
+	
 	public PostDto getPost(String pid) {
-		return postRepository.findPostById(pid).orElseThrow(() -> new PostNotFoundException("post not found"));
+		Account account = accountService.getLoginedAccount();
+		if(account == null) {
+			return postRepository.findPostById(pid).orElseThrow(() -> new PostNotFoundException("post not found"));
+		} else {
+			return postRepository.findPostById(pid, account.getAccountId()).orElseThrow(() -> new PostNotFoundException("post not found"));
+		}
 	}
 	
 	public void deletePost(String pid) {
@@ -73,7 +87,12 @@ public class PostService {
 	}
 	
 	public Page<PostDto> getAccountPosts(String aid, int page) {
-		return postRepository.getPostsByAccountId(aid, PageRequest.of(page, 10));
+		Account account = accountService.getLoginedAccount();
+		if(account == null) {
+			return postRepository.getPostsByAccountId(aid, PageRequest.of(page, 10));
+		} else {
+			return postRepository.getPostsByAccountId(aid, account.getAccountId(), PageRequest.of(page, 10));
+		}
 	}
 	
 }

@@ -9,9 +9,11 @@ export default function Home() {
     const [followPosts, setFollowPosts] = useState([]);
     const [id, setId] = useState("");
     const [tabKey, setTabKey] = useState("all");
+    const [isPostChange, setIsPostChange] = useState(false);
+
 
     const getAllPost = async () => {
-        const res = await fetch("/api/posts", { method: "GET" })
+        const res = await fetch("/api/posts", { method: "GET", credentials: "same-origin" })
         if (res.ok) {
             const data = await res.json();
             setPosts(data);
@@ -21,7 +23,7 @@ export default function Home() {
     }
 
     const getFollowPost = async () => {
-        const res = await fetch("/api/posts/follow", { method: "GET", credentials: "include" })
+        const res = await fetch("/api/posts/follow", { method: "GET", credentials: "same-origin" })
         if (res.ok) {
             const data = await res.json();
             setFollowPosts(data);
@@ -46,15 +48,26 @@ export default function Home() {
         }
     }
 
+    const postChanges = () => {
+        setIsPostChange(true);
+    }
 
     const tabSelect = (k) => {
         setTabKey(k);
         if (k == "all") {
-            if (posts.length == 0) {
+            if(isPostChange) {
+                getAllPost();
+                setIsPostChange(false)
+            }
+            else if (posts.length == 0) {
                 getAllPost();
             }
         } else if (k == "follow") {
-            if (followPosts.length == 0) {
+            if(isPostChange) {
+                getFollowPost();
+                setIsPostChange(false);
+            }
+            else if (followPosts.length == 0) {
                 getFollowPost();
             }
         }
@@ -73,10 +86,10 @@ export default function Home() {
                     onSelect={k => tabSelect(k)}
                     justify>
                     <Tab eventKey="all" title="すべて">
-                        <Posts posts={posts} />
+                        <Posts posts={posts}  reload={postChanges}/>
                     </Tab>
                     <Tab eventKey="follow" title="フォロー中">
-                        <Posts posts={followPosts} />
+                        <Posts posts={followPosts}  reload={postChanges}/>
                     </Tab>
                 </Tabs>
             </div> :
@@ -84,7 +97,7 @@ export default function Home() {
                     <div className="mt-3" style={{ textAlign: "center" }}>
                         <h3>TimeLine</h3>
                     </div>
-                    <Posts posts={posts} />
+                    <Posts posts={posts}/>
                 </div>}
         </div>
     )

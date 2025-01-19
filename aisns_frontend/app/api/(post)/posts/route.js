@@ -3,7 +3,8 @@ import { cookies } from "next/headers";
 const URL_PREFIX = process.env.API_SERVER_URL;
 
 export async function GET(req) {
-    const res = await fetch(URL_PREFIX + "/posts", {method: "GET"})
+    const cookieStore = await cookies();
+    const res = await fetch(URL_PREFIX + "/posts", {method: "GET", headers: {Cookie: cookieStore.toString()}})
     if(res.ok) {
         const data = await res.json();
         const posts = data.content;

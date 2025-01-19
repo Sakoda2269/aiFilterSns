@@ -14,5 +14,7 @@ public class PostDto {
 	private String postId;
 	private String contents;
 	private Date createdDate;
+	private Boolean liked;
+	private Long likeCount;
 	
 }

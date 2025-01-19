@@ -44,6 +44,12 @@ public class AccountController {
 		return ResponseEntity.ok(postService.getAccountPosts(accountId, 0));
 	}
 	
+	@GetMapping("/{accountId}/posts/likes")
+	public ResponseEntity<Page<PostDto>> getAccountLikedPosts(@PathVariable String accountId, @RequestParam(name="page", defaultValue="0") int pageNum) {
+		return ResponseEntity.ok(postService.getLikedPosts(accountId, pageNum));
+	}
+	
+	
 	@PutMapping("/{accountId}/follow")
 	public ResponseEntity<Integer> followAccount(@PathVariable String accountId, @RequestParam("follow") boolean follow) {
 		Account loginedAccount = accountService.getLoginedAccount();

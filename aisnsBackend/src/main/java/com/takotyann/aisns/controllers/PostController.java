@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.takotyann.aisns.dtos.PostDto;
 import com.takotyann.aisns.entities.Account;
+import com.takotyann.aisns.exceptions.LoginRequireException;
 import com.takotyann.aisns.services.AccountService;
+import com.takotyann.aisns.services.LikeService;
 import com.takotyann.aisns.services.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class PostController {
 	
 	private final AccountService accountService;
 	private final PostService postService;
+	private final LikeService likeService;
 	
 	@GetMapping("")
 	public ResponseEntity<Page<PostDto>> getTimeline(@RequestParam(name = "page", defaultValue="0") int pageNum) {
@@ -32,11 +35,13 @@ public class PostController {
 	}
 	
 	@PostMapping("")
-	public void post(@RequestParam("contents") String contents) {
+	public ResponseEntity<String> post(@RequestParam("contents") String contents) {
 		Account account = accountService.getLoginedAccount();
-		if(account != null) {
-			postService.post(account, contents);
+		if(account == null) {
+			throw new LoginRequireException("unauthorized");
 		}
+		String id = postService.post(account, contents);
+		return ResponseEntity.ok(id);
 	}
 	
 	@GetMapping("/{pid}")
@@ -56,6 +61,17 @@ public class PostController {
 		return ResponseEntity.ok("edit success");
 	}
 	
+	@PutMapping("/{pid}/like")
+	public ResponseEntity<Integer> likePost(@PathVariable String pid, @RequestParam(name="like") boolean like) {
+		if(like) {
+			int count = likeService.like(pid);
+			return ResponseEntity.ok(count);
+		} else {
+			int count = likeService.unLike(pid);
+			return ResponseEntity.ok(count);
+		}
+	}
+	
 	@GetMapping("/follows")
 	public ResponseEntity<Page<PostDto>> getFollowTimeline(@RequestParam(name = "page", defaultValue="0") int pageNum) {
 		Account account = accountService.getLoginedAccount();
@@ -64,7 +80,5 @@ public class PostController {
 		}
 		return ResponseEntity.status(401).body(null);
 	}
-	
-	
 	
 }
