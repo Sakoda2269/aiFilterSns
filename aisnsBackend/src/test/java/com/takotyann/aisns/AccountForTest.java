@@ -118,7 +118,7 @@ public class AccountForTest {
 	public List<Map<String, String>> getLikedPosts() throws Exception {
 		List<Map<String, String>> result = new ArrayList<>();
 		MvcResult  res = mockMvc.perform(
-				get("/api/posts/likes")
+				get("/api/accounts/"+ id +  "/posts/likes")
 				.cookie(new Cookie("token", token))
 			).andDo(print())
 			.andExpect(status().isOk())
