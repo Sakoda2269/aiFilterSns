@@ -19,6 +19,7 @@ import com.takotyann.aisns.entities.Account;
 import com.takotyann.aisns.services.AccountService;
 import com.takotyann.aisns.services.PostService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -40,8 +41,9 @@ public class AccountController {
 	}
 	
 	@PostMapping("/delete")
-	public ResponseEntity<String> deleteAccount(@RequestParam(name="password") String password) {
-		accountService.deleteAccount(password);
+	public ResponseEntity<String> deleteAccount(@RequestParam(name="password") String password, HttpServletResponse res) {
+		
+		accountService.deleteAccount(password, res);
 		return ResponseEntity.ok("delete success");
 	}
 	

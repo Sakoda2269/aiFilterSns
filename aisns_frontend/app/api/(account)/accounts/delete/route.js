@@ -14,7 +14,7 @@ export async function POST(req) {
     });
     if(res.ok) {
         const pid = await res.text();
-        return new Response(pid, {status: 200});
+        return new Response(pid, {status: 200, headers: {"Set-Cookie": res.headers.get('set-cookie')}});
     } else {
         return new Response("errro", {status: res.status});
     }

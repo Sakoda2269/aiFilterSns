@@ -17,14 +17,19 @@ export default function Home() {
 
 
     const getAllPost = async () => {
-        const res = await fetch("/api/posts?page=0", { method: "GET", credentials: "same-origin" })
+        let res;
+        if(id != "" || id != null) {
+            res = await fetch("/api/posts?page=0", { method: "GET", credentials: "same-origin" })
+        } else {
+            res = await fetch("/api/posts?page=0", { method: "GET", credentials: "same-origin"})
+        }
         if (res.ok) {
             const data = await res.json();
             setPosts(data.posts);
             setAllPostLastPage(data.last)
         } else {
             setPosts([]);
-            setAllPostLastPage(false)
+            setAllPostLastPage(true)
         }
     }
 
@@ -36,7 +41,7 @@ export default function Home() {
             setFollowPostLastPage(data.last)
         } else {
             setFollowPosts([]);
-            setFollowPostLastPage(false)
+            setFollowPostLastPage(true)
         }
     }
 

@@ -20,6 +20,8 @@ import com.takotyann.aisns.exceptions.PermissionDeniedException;
 import com.takotyann.aisns.repositories.AccountRepository;
 import com.takotyann.aisns.repositories.FollowRepository;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -30,6 +32,7 @@ public class AccountService {
 	private final PasswordEncoder encoder;
 	private final FollowRepository followRepository;
 	
+	private static final boolean IS_SECURE = Boolean.parseBoolean(System.getenv("SECURE"));
 	
 	public String registerAccount(String email, String name, String password) {
 		if(accountRepository.existsByEmail(email)) {
@@ -83,7 +86,8 @@ public class AccountService {
 		return null;
 	}
 	
-	public void deleteAccount(String password) {
+	public void deleteAccount(String password, HttpServletResponse res) {
+		logout(res);
 		Account logined = getLoginedAccount();
 		if(logined == null) {
 			throw new LoginRequireException("login require");
@@ -105,6 +109,15 @@ public class AccountService {
 	public int unFollow(Account follower, String accountId) {
 		followRepository.deleteById(new FollowId(follower.getAccountId(), accountId));
 		return followRepository.getFollowerNum(accountId);
+	}
+	
+	public void logout(HttpServletResponse res) {
+		Cookie cookie = new Cookie("token", null);
+		cookie.setMaxAge(0);
+		cookie.setPath("/");
+		cookie.setHttpOnly(true);
+		cookie.setSecure(IS_SECURE);
+		res.addCookie(cookie);
 	}
 	
 }
