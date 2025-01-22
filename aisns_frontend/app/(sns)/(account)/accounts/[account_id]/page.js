@@ -1,6 +1,7 @@
 "use client"
 
 import Posts from "@/components/posts/Posts";
+import Link from "next/link";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -241,7 +242,9 @@ function Header({openMenu, accountId, followeeNum, followerNum, accountName, fol
                             <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }}>通報</button>
                         </div>
                         {accountId == id && <div>
-                            <button className="btn btn-light" style={{ color: "red", padding: "5px 10px", width: "150px" }}>アカウント削除</button>
+                            <Link href={"/accounts/delete"}>
+                                <button className="btn btn-light" style={{ color: "red", padding: "5px 10px", width: "150px" }}>アカウント削除</button>
+                            </Link>
                         </div>}
                     </div>}
                 </span>

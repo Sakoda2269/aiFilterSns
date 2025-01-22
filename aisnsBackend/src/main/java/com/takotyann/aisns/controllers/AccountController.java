@@ -39,6 +39,12 @@ public class AccountController {
 		return ResponseEntity.ok(accountService.getAccountDtoById(accountId));
 	}
 	
+	@PostMapping("/delete")
+	public ResponseEntity<String> deleteAccount(@RequestParam(name="password") String password) {
+		accountService.deleteAccount(password);
+		return ResponseEntity.ok("delete success");
+	}
+	
 	@GetMapping("/{accountId}/posts")
 	public ResponseEntity<Page<PostDto>> getAccountPosts(@PathVariable String accountId, @RequestParam(name="page", defaultValue="0") int pageNum) {
 		return ResponseEntity.ok(postService.getAccountPosts(accountId, pageNum));

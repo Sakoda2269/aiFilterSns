@@ -15,6 +15,8 @@ import com.takotyann.aisns.entities.Follow;
 import com.takotyann.aisns.entities.FollowId;
 import com.takotyann.aisns.exceptions.AccountNotFoundException;
 import com.takotyann.aisns.exceptions.EmailConflictException;
+import com.takotyann.aisns.exceptions.LoginRequireException;
+import com.takotyann.aisns.exceptions.PermissionDeniedException;
 import com.takotyann.aisns.repositories.AccountRepository;
 import com.takotyann.aisns.repositories.FollowRepository;
 
@@ -79,6 +81,18 @@ public class AccountService {
 			}
 		}
 		return null;
+	}
+	
+	public void deleteAccount(String password) {
+		Account logined = getLoginedAccount();
+		if(logined == null) {
+			throw new LoginRequireException("login require");
+		}
+		if(encoder.matches(password, logined.getPassword())) {
+			accountRepository.deleteById(logined.getAccountId());
+		} else {
+			throw new PermissionDeniedException("password check failed");
+		}
 	}
 	
 	public int follow(Account follower, String followeeId) {
