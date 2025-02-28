@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.takotyann.aisns.exceptions.AccountNotFoundException;
 import com.takotyann.aisns.exceptions.EmailConflictException;
+import com.takotyann.aisns.exceptions.FilterException;
 import com.takotyann.aisns.exceptions.LoginRequireException;
 import com.takotyann.aisns.exceptions.PermissionDeniedException;
 import com.takotyann.aisns.exceptions.PostNotFoundException;
@@ -37,6 +38,11 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(LoginRequireException.class)
 	public ResponseEntity<String> handleLoginRequireExceptionException(LoginRequireException ex) {
 		return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+	}
+	
+	@ExceptionHandler(FilterException.class)
+	public ResponseEntity<String> handleFilterException(FilterException ex) {
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 	
 }

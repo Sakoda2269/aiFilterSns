@@ -69,6 +69,8 @@ public class SecurityConfig {
 			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/accounts/**")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/posts")).permitAll()
 			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/posts/*")).permitAll()
+			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/filter/**")).permitAll()
+			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/filter/**")).permitAll()
 			.anyRequest().authenticated()
 		)
 		.addFilter(new JwtCreateFilter(authManager))
