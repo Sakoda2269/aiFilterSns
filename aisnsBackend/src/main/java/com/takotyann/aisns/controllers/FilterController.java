@@ -22,6 +22,7 @@ public class FilterController {
 	
 	private final WebClient webClient;
 	private static final String API_KEY = System.getenv("GEMINI_API_KEY");
+	private static final String API_URL = System.getenv("GEMINI_API_URL");
 	private static final String[] filters = {
 			"お嬢様言葉", 
 			"ツンデレ妹言葉", 
@@ -32,9 +33,16 @@ public class FilterController {
 			"吟遊詩人風",
 			"ホスト風"
 			};
+	private static final String prompt = """
+			{
+			"contents": [{
+				"parts": [{"text": "後に続く「」の中身を%sに変換して、結果のみを返してください。ただし、「」はいらないです。「%s」"}]
+			}]
+		}
+								""";
 	
 	public FilterController(WebClient.Builder webClientBuilder) {
-		this.webClient = webClientBuilder.baseUrl("https://generativelanguage.googleapis.com/v1beta/models").build();
+		this.webClient = webClientBuilder.baseUrl(API_URL).build();
 	}
 	
 	@GetMapping("/filters")
@@ -50,19 +58,10 @@ public class FilterController {
 			throw new FilterException("そのフィルターは存在しません");
 		}
 		
-		String prompt = """
-				{
-				"contents": [{
-					"parts": [{"text": "後に続く「」の中身を%sに変換して、結果のみを返してください。ただし、「」はいらないです。「%s」"}]
-				}]
-			}
-									""".formatted(filters[filter], post);
-		
-		System.out.println(prompt);
 		
 		return webClient.post()
 				.uri("/gemini-2.0-flash:generateContent?key=" + API_KEY)
-				.bodyValue(prompt)
+				.bodyValue(prompt.formatted(filters[filter], post))
 				.header("Content-Type", "application/json")
 				.retrieve()
 				.bodyToMono(Map.class)
