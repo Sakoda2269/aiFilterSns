@@ -146,7 +146,6 @@ function ListPost({post, reload}){
                         <button className="btn rounded-circle border-secondary" onClick={openMenu}>︙</button>
                         {menuOpen && <div className="border rounded border-secondary"
                             style={{ position: "absolute", left: "-80px", top: "20px", background: "white" }}>
-                            <div><button className="btn btn-light" style={{ padding: "5px 10px", width: "80px" }}>通報</button></div>
                             <div>
                                 <button className="btn btn-light" style={{ padding: "5px 10px", width: "80px" }} onClick={openFilterMenu}>フィルター</button>
                                 {filterMenuOpen && <div className="border rounded border-secondary"
