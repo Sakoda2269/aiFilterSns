@@ -18,8 +18,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.Cookie;
-import lombok.Data;
-@Data
 public class AccountForTest {
 	private final MockMvc mockMvc;
 	private static ObjectMapper mapper = new ObjectMapper();
@@ -46,6 +44,10 @@ public class AccountForTest {
 			.andReturn();
 		this.id = res.getResponse().getContentAsString();
 		login();
+	}
+	
+	public String getId() {
+		return this.id;
 	}
 	 
 	private void login() throws Exception {

@@ -1,13 +1,37 @@
 version: '3.8'
 
 services:
+  backend:
+    build: ./aisnsBackend
+    container_name: sns_server
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    networks:
+      - mynetwork
+
+  frontend:
+    build: ./aisns_frontend
+    container_name: sns_front
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - mynetwork
+    env_file:
+      - .env
+
   postgres:
     image: postgres:latest
     container_name: postgres-container
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: takotyann
-      POSTGRES_DB: aisns
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
