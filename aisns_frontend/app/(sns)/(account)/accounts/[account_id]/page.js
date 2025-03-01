@@ -213,12 +213,13 @@ function Header({openMenu, accountId, followeeNum, followerNum, accountName, fol
         router.push("/home")
     }
 
+
     return (
         <div className="lr">
             <span>
                 <span style={{ display: "flex" }}>
                     <h3>{accountName}</h3>
-                    {id != accountId && <div className="container">
+                    {(id != accountId && id != "" && id != null) && <div className="container">
                         {!following ?
                             <button className="btn btn-primary rounded-pill" onClick={follow}>フォロー</button>
                             :
