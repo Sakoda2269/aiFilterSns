@@ -1,3 +1,4 @@
+import { useFilters } from "@/contexts/AuthContext";
 import getDate from "@/util/getDate";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -31,7 +32,7 @@ function ListPost({post, reload}){
     const [mouseOver, setMouseOver] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [filterMenuOpen, setFilterMenuOpen] = useState(false);
-    const [filters, setFilters] = useState([]);
+    const filters = useFilters();
     const router = useRouter();
 
     useEffect(() => {
@@ -44,19 +45,6 @@ function ListPost({post, reload}){
         setLiked(post.liked);
         setLikeCount(post.likeCount);
 
-        const getFilters = async () => {
-            const res = await fetch("/api/ai/filter", {
-                method: "GET",
-                credentials: "include"
-            });
-            if(res.ok) {
-                const data = await res.json();
-                setFilters(data);
-            } else {
-                setFilters(["エラー"]);
-            }
-        }
-        getFilters();
     }, [post])
 
     const jumpPostPage = (e) => {

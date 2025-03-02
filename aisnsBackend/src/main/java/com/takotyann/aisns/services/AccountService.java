@@ -47,6 +47,7 @@ public class AccountService {
 		account.setRoles("ROLE_GENERAL");
 		account.setIsEnabled(false);
 		accountRepository.save(account);
+		System.out.println(id);
 		return id;
 	}
 	

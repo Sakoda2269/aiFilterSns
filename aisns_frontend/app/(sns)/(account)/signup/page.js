@@ -1,5 +1,6 @@
 "use client"
 
+import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -12,6 +13,7 @@ export default function Signup() {
     const [pass, setPass] = useState("");
     const [repass, setRepass] = useState("");
     const [error, setError] = useState("");
+    const [id, setId] = useAuth();
 
     const send = async () => {
         if(pass != repass) {
@@ -30,7 +32,11 @@ export default function Signup() {
             headers: header,
         });
         if(res.ok) {
-            router.push("/login");
+            let text = await res.text();
+            text = text.substring(1, text.length - 1);
+            setId(text);
+            console.log(text);
+            router.push("/home");
         } else {
             const data = await res.text();
             setError(data);

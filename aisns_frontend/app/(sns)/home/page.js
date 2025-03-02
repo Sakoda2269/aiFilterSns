@@ -1,19 +1,21 @@
 "use client"
 import Posts from "@/components/posts/Posts";
 import PostSender from "@/components/postSender/postSender";
+import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react"
 import { Tab, Tabs } from "react-bootstrap";
 
 export default function Home() {
     const [posts, setPosts] = useState([]);
     const [followPosts, setFollowPosts] = useState([]);
-    const [id, setId] = useState("");
+    const [id, setId] = useAuth();
     const [tabKey, setTabKey] = useState("all");
     const [isPostChange, setIsPostChange] = useState(false);
     const [allPostPageNum, setAllPostPageNum] = useState(0)
     const [allPostLastPage, setAllPostLastPage] = useState(false);
     const [followPostPageNum, setFollowPostPageNum] = useState(0);
     const [followPostLastPage, setFollowPostLastPage] = useState(false);
+
 
 
     const getAllPost = async () => {
@@ -72,10 +74,6 @@ export default function Home() {
     }
 
     useEffect(() => {
-        const localId = sessionStorage.getItem("id");
-        if (localId) {
-            setId(localId);
-        }
         getAllPost();
     }, [])
 

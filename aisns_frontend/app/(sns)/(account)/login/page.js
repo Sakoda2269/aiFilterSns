@@ -1,8 +1,9 @@
 "use client"
 
+import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 
 export default function Login() {
@@ -12,6 +13,14 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
     const [error, setError] = useState("");
+
+    const [id, setId] = useAuth();
+
+    useEffect(() => {
+        if(id != "") {
+            router.push("/home")
+        }
+    }, [id, router])
 
     const send = async () => {
         const body = {
@@ -27,7 +36,7 @@ export default function Login() {
         });
         if(res.ok) {
             const data = await res.text();
-            sessionStorage.setItem("id", data);
+            setId(data);
             router.push("/accounts/" + data);
         } else {
             setError("メールアドレスまたはパスワードが違います");

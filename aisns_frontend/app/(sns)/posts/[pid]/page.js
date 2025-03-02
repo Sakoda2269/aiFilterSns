@@ -1,4 +1,5 @@
 "use client"
+import { useAuth, useFilters } from "@/contexts/AuthContext";
 import getDate from "@/util/getDate";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -14,12 +15,13 @@ export default function Post() {
     const [likeCount, setLikeCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [id, setId] = useState("");
+    const [id, setId] = useAuth();
     const [error, setError] = useState("");
     const [filterMenuOpen, setFilterMenuOpen] = useState(false);
-    const [filters, setFilters] = useState([]);
+    const filters = useFilters();
     const pid = params.pid;
     const router = useRouter();
+
 
     useEffect(() => {
         const getPost = async () => {
@@ -42,21 +44,7 @@ export default function Post() {
             }
             setLoading(false);
         }
-        const getFilters = async () => {
-            const res = await fetch("/api/ai/filter", {
-                method: "GET",
-                credentials: "include"
-            });
-            if(res.ok) {
-                const data = await res.json();
-                setFilters(data);
-            } else {
-                setFilters(["エラー"]);
-            }
-        }
-        setId(sessionStorage.getItem("id"));
         getPost();
-        getFilters();
     }, [pid])
 
     const openMenu = (e) => {

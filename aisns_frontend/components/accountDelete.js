@@ -1,5 +1,6 @@
 "use client"
 
+import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react"
@@ -12,6 +13,8 @@ export default function AccountDeletePage() {
     const router = useRouter();
     const success = searchParams.get("success");
 
+    const [id, setId] = useAuth();
+
     const deleteAccount = async (e) => {
         const res = await fetch("/api/accounts/delete", {
             method: "POST",
@@ -22,7 +25,7 @@ export default function AccountDeletePage() {
         if (res.ok) {
             router.push("/accounts/delete?success=true")
             setError("");
-            sessionStorage.removeItem("id")
+            setId("");
         } else {
             if (res.status == 403) {
                 setError("パスワードが違います")

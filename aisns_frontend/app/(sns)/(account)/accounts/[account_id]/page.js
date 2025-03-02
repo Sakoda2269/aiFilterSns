@@ -1,6 +1,7 @@
 "use client"
 
 import Posts from "@/components/posts/Posts";
+import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -14,7 +15,6 @@ export default function AccountPage() {
     const [accountName, setAccountName] = useState("");
     const [following, setFollowing] = useState(false);
     const [accountId, setAccountId] = useState("");
-    const [id, setId] = useState("");
     const [loading, setLoading] = useState(true);
     const [statusCode, setStatusCode] = useState(0)
     const params = useParams();
@@ -31,6 +31,8 @@ export default function AccountPage() {
     const [accountPostLastPage, setAccountPostLastPage] = useState(false);
     const [accountLikedPostPageNum, setAccountLikedPostPageNum] = useState(0);
     const [accountLikedPostLastPage, setAccountLikedPostLastpage] = useState(false);
+
+    const [id, setId] = useAuth();
 
     const getAccountPosts = async () => {
         const res = await fetch("/api/accounts/" + params.account_id + "/posts?page=0", { method: "GET", credentials: "same-origin" })
@@ -86,21 +88,19 @@ export default function AccountPage() {
             });
             if (res.ok) {
                 const data = await res.json();
-                console.log(data);
                 setAccountName(data.name);
                 setFolloweeNum(data.followeeNum);
                 setFollowerNum(data.followerNum);
                 setFollowing(data.following);
             }
             setStatusCode(res.status)
-            if (res.status == 404 && myAccount) {
-                router.push("/login")
+            if (res.status == 404) {
+                setId("");
             }
             setLoading(false)
         }
         getAccount();
         setAccountId(params.account_id);
-        setId(sessionStorage.getItem("id"));
         getAccountPosts();
         getLikePosts();
     }, [params, myAccount, router])
@@ -139,7 +139,6 @@ export default function AccountPage() {
                                     followerNum={followerNum}
                                     following={following}
                                     accountName={accountName}
-                                    id={id}
                                     menuOpen={menuOpen}
                                     setFollowing = {setFollowing}
                                     setFollowerNum={setFollowerNum}
@@ -161,6 +160,11 @@ export default function AccountPage() {
                         {statusCode == 404 &&
                             <div className="container mt-3">
                                 <h3>アカウントが見つかりません</h3>
+                                {myAccount && 
+                                    <div className="mt-3">
+                                        <Link href="/login"><button className="btn btn-primary">ログイン</button></Link>
+                                    </div>
+                                }
                             </div>
                         }
                     </div>
@@ -170,9 +174,10 @@ export default function AccountPage() {
     );
 }
 
-function Header({openMenu, accountId, followeeNum, followerNum, accountName, following, id, menuOpen, setFollowing, setFollowerNum}) {
+function Header({openMenu, accountId, followeeNum, followerNum, accountName, following, menuOpen, setFollowing, setFollowerNum}) {
 
     const router = useRouter()
+    const [id, setId] = useAuth();
 
     const follow = async () => {
         const res = await fetch("/api/accounts/" + accountId + "/follow", {
@@ -205,7 +210,7 @@ function Header({openMenu, accountId, followeeNum, followerNum, accountName, fol
 
     const logout = async (e) => {
         e.stopPropagation();
-        sessionStorage.removeItem("id");
+        setId("");
         const res = await fetch("/api/logout", {
             method: "POST",
             credentials: "same-origin"
