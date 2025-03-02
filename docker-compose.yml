@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   backend:
-    build: ./aisnsBackend
+    build: ./aiFilterSnsBackend
     container_name: sns_server
     ports:
       - "8080:8080"
@@ -14,7 +14,7 @@ services:
       - mynetwork
 
   frontend:
-    build: ./aisns_frontend
+    build: ./aiFilterSnsFrontend
     container_name: sns_front
     ports: 
       - "3000:3000"
