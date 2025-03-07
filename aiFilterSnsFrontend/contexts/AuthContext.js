@@ -10,7 +10,7 @@ export function AuthProvider ({children}) {
 
     useEffect(() => {
         const getAuth = async () => {
-            const res = await fetch("/api/auth", { method: "POST", credentials: "same-origin" });
+            const res = await fetch("/api/auth", { method: "POST", credentials: "include" });
             if(res.ok) {
                 const text = await res.text();
                 setIsAuth(text);

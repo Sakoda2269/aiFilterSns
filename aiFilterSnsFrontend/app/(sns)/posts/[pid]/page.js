@@ -27,7 +27,7 @@ export default function Post() {
         const getPost = async () => {
             const res = await fetch("/api/posts/" + pid, {
                 method: "GET",
-                credentials: "same-origin"
+                credentials: "include"
             });
             if (res.ok) {
                 const data = await res.json();
@@ -56,7 +56,7 @@ export default function Post() {
         e.stopPropagation();
         const res = await fetch("/api/posts/" + pid, {
             method: "Delete",
-            credentials: "same-origin"
+            credentials: "include"
         })
         if (res.ok) {
             router.push("/home");
@@ -71,7 +71,7 @@ export default function Post() {
         }
         const res = await fetch("/api/posts/" + pid + "/like", {
             method: "PUT",
-            credentials: "same-origin",
+            credentials: "include",
             body: JSON.stringify({like: "true"}),
             headers: { "Content-Type": "application/json" }
         });
@@ -90,7 +90,7 @@ export default function Post() {
         }
         const res = await fetch("/api/posts/" + pid + "/like", {
             method: "PUT",
-            credentials: "same-origin",
+            credentials: "include",
             body: JSON.stringify({like: "false"}),
             headers: { "Content-Type": "application/json" }
         });
@@ -113,7 +113,7 @@ export default function Post() {
         } else {
             const res = await fetch("/api/ai/filter", {
                 method: "POST",
-                credentials: "same-origin",
+                credentials: "include",
                 body: JSON.stringify({number: number, message: original}),
                 headers: { "Content-Type": "application/json" }
             });

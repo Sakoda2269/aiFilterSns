@@ -56,7 +56,7 @@ function ListPost({post, reload}){
         e.stopPropagation();
         const res = await fetch("/api/posts/" + pid + "/like", {
             method: "PUT",
-            credentials: "same-origin",
+            credentials: "include",
             body: JSON.stringify({like: "true"}),
             headers: { "Content-Type": "application/json" }
         });
@@ -74,7 +74,7 @@ function ListPost({post, reload}){
         e.stopPropagation();
         const res = await fetch("/api/posts/" + pid + "/like", {
             method: "PUT",
-            credentials: "same-origin",
+            credentials: "include",
             body: JSON.stringify({like: "false"}),
             headers: { "Content-Type": "application/json" }
         });
@@ -106,7 +106,7 @@ function ListPost({post, reload}){
         } else {
             const res = await fetch("/api/ai/filter", {
                 method: "POST",
-                credentials: "same-origin",
+                credentials: "include",
                 body: JSON.stringify({number: number, message: original}),
                 headers: { "Content-Type": "application/json" }
             });

@@ -21,9 +21,9 @@ export default function Home() {
     const getAllPost = async () => {
         let res;
         if(id != "" || id != null) {
-            res = await fetch("/api/posts?page=0", { method: "GET", credentials: "same-origin" })
+            res = await fetch("/api/posts?page=0", { method: "GET", credentials: "include" })
         } else {
-            res = await fetch("/api/posts?page=0", { method: "GET", credentials: "same-origin"})
+            res = await fetch("/api/posts?page=0", { method: "GET", credentials: "include"})
         }
         if (res.ok) {
             const data = await res.json();
@@ -36,7 +36,7 @@ export default function Home() {
     }
 
     const getFollowPost = async () => {
-        const res = await fetch("/api/posts/follow?page=0", { method: "GET", credentials: "same-origin" })
+        const res = await fetch("/api/posts/follow?page=0", { method: "GET", credentials: "include" })
         if (res.ok) {
             const data = await res.json();
             setFollowPosts(data.posts);
@@ -48,7 +48,7 @@ export default function Home() {
     }
 
     const changePage = async() => {
-        const res = await fetch("/api/posts?page="+(allPostPageNum + 1), { method: "GET", credentials: "same-origin" })
+        const res = await fetch("/api/posts?page="+(allPostPageNum + 1), { method: "GET", credentials: "include" })
         if (res.ok) {
             const data = await res.json();
             setPosts(prev => (
@@ -61,7 +61,7 @@ export default function Home() {
     }
 
     const changeFollowPage = async() => {
-        const res = await fetch("/api/posts/follow?page="+(followPostPageNum + 1), { method: "GET", credentials: "same-origin" })
+        const res = await fetch("/api/posts/follow?page="+(followPostPageNum + 1), { method: "GET", credentials: "include" })
         if (res.ok) {
             const data = await res.json();
             setFollowPosts(prev => (
