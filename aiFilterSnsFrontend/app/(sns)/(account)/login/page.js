@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react"
 
+const URL_PREFIX = process.env.NEXT_SERVER_URL;
 
 export default function Login() {
 
@@ -28,7 +29,7 @@ export default function Login() {
             password: pass
         };
         const header = { "Content-Type": "application/json" };
-        const res = await fetch("http://localhost:3000/api/login", {
+        const res = await fetch("/api/login", {
             method: "POST",
             body: JSON.stringify(body),
             headers: header, 
