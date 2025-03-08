@@ -27,7 +27,8 @@ export default function Layout({ children }) {
                 <div className="col-1">
                     <Sidebar first={first}/>
                 </div>
-                <div className="col-11">
+                <div className="col-1"></div>
+                <div className="col-10">
                     {children}
                 </div>
             </div>
