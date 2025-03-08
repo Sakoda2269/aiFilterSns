@@ -8,7 +8,7 @@ import { FaRegHeart } from "react-icons/fa6";
 
 export default function Posts({posts, reload, addPage, isLast}) {
     return (
-        <div style={{overflow: "visible", height: "100vh"}}>
+        <div className="col" style={{overflow: "visible", height: "100vh"}}>
             {posts.map((value, index) => (<ListPost post={value} key={"post" + index} reload={reload}/>))}
             <div>
                 {!isLast && (<div style={{padding: "30px"}}>
@@ -123,8 +123,8 @@ function ListPost({post, reload}){
 
     return(
         <div className="container mt-3" style={{borderBottom: "1px solid black", background: mouseOver ? "#dddddd" : "white"}}
-            onMouseEnter={() => setMouseOver(true)}
-            onMouseLeave={() => setMouseOver(false)}
+            // onMouseEnter={() => setMouseOver(true)}
+            // onMouseLeave={() => setMouseOver(false)}
             onClick={jumpPostPage}>
             <div className="lr">
                 <span><Link href={"/accounts/" + aid} onClick={(e) => {e.stopPropagation()}}><h4>{aname}</h4></Link></span>

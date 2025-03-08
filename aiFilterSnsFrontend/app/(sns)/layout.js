@@ -24,14 +24,11 @@ export default function Layout({ children }) {
             </header> */}
             <AuthProvider>
             <div className="row">
-                <div className="col-1 container mt-3">
+                <div className="col-1">
                     <Sidebar first={first}/>
                 </div>
-                <div className="col-9">
+                <div className="col-11">
                     {children}
-                </div>
-                <div className="col-2">
-
                 </div>
             </div>
             </AuthProvider>

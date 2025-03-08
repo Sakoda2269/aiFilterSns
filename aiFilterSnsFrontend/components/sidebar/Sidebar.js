@@ -18,7 +18,7 @@ export default function Sidebar({first}) {
     }
 
     return (
-        <div style={{ position: "fixed", display: "flex", flexDirection: "column", borderRight: "1px solid black", height: "95vh", alignItems: "center" }}>
+        <div style={{ display: "flex", flexDirection: "column", borderRight: "1px solid black", height: "95vh", alignItems: "center", position: "fixed" }}>
             <div style={{ padding: "10px" }}>
                 <Link href="/home"><button className="btn"><FaHome size={30} color={first == "home" ? "blue":"black"}/></button></Link>
             </div>
