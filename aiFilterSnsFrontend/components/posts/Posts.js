@@ -8,12 +8,18 @@ import { FaRegHeart } from "react-icons/fa6";
 
 export default function Posts({posts, reload, addPage, isLast}) {
     return (
-        <div className="col" style={{overflow: "visible", height: "100vh"}}>
-            {posts.map((value, index) => (<ListPost post={value} key={"post" + index} reload={reload}/>))}
+        <div  style={{overflow: "visible", height: "100vh", width: "100%"}}>
+            {posts.map((value, index) => (
+                <div key={"post" + index} style={{}}>
+                    <ListPost post={value} reload={reload}/>
+                </div>
+            ))}
             <div>
-                {!isLast && (<div style={{padding: "30px"}}>
-                    <button className="btn btn-light border border-secondary" style={{width: "100%"}} onClick={addPage}>追加で読み込む</button>
-                </div>)}
+                {!isLast && (
+                    <div style={{padding: "30px"}}>
+                        <button className="btn btn-light border border-secondary" style={{width: "100%"}} onClick={addPage}>追加で読み込む</button>
+                    </div>
+                )}
             </div>
         </div>
     )
@@ -122,37 +128,37 @@ function ListPost({post, reload}){
     
 
     return(
-        <div className="container mt-3" style={{borderBottom: "1px solid black", background: mouseOver ? "#dddddd" : "white"}}
+        <div className="mt-3" style={{width: "100%", borderBottom: "1px solid black", background: mouseOver ? "#dddddd" : "white", paddingLeft: "20px"}}
             // onMouseEnter={() => setMouseOver(true)}
             // onMouseLeave={() => setMouseOver(false)}
             onClick={jumpPostPage}>
-            <div className="lr">
-                <span><Link href={"/accounts/" + aid} onClick={(e) => {e.stopPropagation()}}><h4>{aname}</h4></Link></span>
-                <span style={{paddingTop: "5px"}}>
+            <div className="row">
+                <div className="col-lg-9 col-5"><Link href={"/accounts/" + aid} onClick={(e) => {e.stopPropagation()}}><h4>{aname}</h4></Link></div>
+                <div className="col-lg-2 col-3" style={{paddingTop: "5px"}}>
                     {date}&nbsp;{time}
-                    <span style={{ marginLeft: "30px", position: "relative" }}>
-                        <button className="btn rounded-circle border-secondary" onClick={openMenu}>︙</button>
-                        {menuOpen && <div className="border rounded border-secondary"
-                            style={{ position: "absolute", left: "-80px", top: "20px", background: "white" }}>
-                            <div>
-                                <button className="btn btn-light" style={{ padding: "5px 10px", width: "80px" }} onClick={openFilterMenu}>フィルター</button>
-                                {filterMenuOpen && <div className="border rounded border-secondary"
-                                    style={{ position: "absolute", left: "-80px", top: "20px", background: "white", zIndex: 100 }}>
-                                    {filters.map((filter, index) => (
-                                        <div key={"filter"+filter}>
-                                            <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, index)}>{filter}</button>
-                                        </div>
-                                    ))}
-                                    <div>
-                                        <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, -1)}>元に戻す</button>
+                </div>
+                <div className="col-lg col" style={{ marginLeft: "30px", position: "relative" }}>
+                    <button className="btn rounded-circle border-secondary" onClick={openMenu}>︙</button>
+                    {menuOpen && <div className="border rounded border-secondary"
+                        style={{ position: "absolute", left: "-80px", top: "20px", background: "white" }}>
+                        <div>
+                            <button className="btn btn-light" style={{ padding: "5px 10px", width: "80px" }} onClick={openFilterMenu}>フィルター</button>
+                            {filterMenuOpen && <div className="border rounded border-secondary"
+                                style={{ position: "absolute", left: "-80px", top: "20px", background: "white", zIndex: 100 }}>
+                                {filters.map((filter, index) => (
+                                    <div key={"filter"+filter}>
+                                        <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, index)}>{filter}</button>
                                     </div>
-                                </div>}
-                            </div>
-                        </div>}
-                    </span>
-                </span>
+                                ))}
+                                <div>
+                                    <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, -1)}>元に戻す</button>
+                                </div>
+                            </div>}
+                        </div>
+                    </div>}
+                </div>
             </div>
-            <div style={{paddingLeft: "30px", textAlign: "left"}}>
+            <div style={{width: "100%", textAlign: "left"}}>
                 {contents}
             </div>
             <br />

@@ -27,8 +27,7 @@ export default function Layout({ children }) {
                 <div className="col-1">
                     <Sidebar first={first}/>
                 </div>
-                <div className="col-1"></div>
-                <div className="col-10" style={{paddingRight: "10px"}}>
+                <div className="col-11" style={{paddingRight: "40px", paddingLeft: "40px"}}>
                     {children}
                 </div>
             </div>
