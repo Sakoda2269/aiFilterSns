@@ -16,7 +16,7 @@ docker-composeと同じディレクトリに.envを作成し、環境変数と�
 
 
 #データベース設定
-DB_HOST=your_db_host #docker-comopse内のservice名を指定する。デフォルトでpostgres
+DB_HOST=your_db_host
 DB_NAME=yoru_db_name
 DB_PASS=yoru_db_password
 DB_PORT=your_db_port
