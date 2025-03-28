@@ -160,7 +160,7 @@ function ListPost({post, reload}){
                 </div>
             </div>
             <div className="row" style={{width: "100%", textAlign: "left", paddingBottom: "15px"}}>
-                {contents}
+                <pre>{contents}</pre>
             </div>
             {id != "" ?
                 <div className="row" style={{textAlign: "left"}}>

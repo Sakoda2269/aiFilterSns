@@ -163,8 +163,8 @@ export default function Post() {
                             </span>
                         </div>
 
-                        <div className="mt-3 container">
-                            {contents}
+                        <div className="mt-3" style={{paddingLeft: "20px", paddingBottom: "30px"}}>
+                            <pre>{contents}</pre>
                         </div>
                         <div style={{ textAlign: "left"}}>
                             {liked ?
