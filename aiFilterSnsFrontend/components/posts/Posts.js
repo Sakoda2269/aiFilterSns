@@ -1,4 +1,4 @@
-import { useFilters } from "@/contexts/AuthContext";
+import { useAuth, useFilters } from "@/contexts/AuthContext";
 import getDate from "@/util/getDate";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -8,7 +8,7 @@ import { FaRegHeart } from "react-icons/fa6";
 
 export default function Posts({posts, reload, addPage, isLast}) {
     return (
-        <div  style={{overflow: "visible", height: "100vh", width: "100%"}}>
+        <div  style={{overflow: "visible", height: "90vh", width: "100%"}}>
             {posts.map((value, index) => (
                 <div key={"post" + index} style={{}}>
                     <ListPost post={value} reload={reload}/>
@@ -38,6 +38,7 @@ function ListPost({post, reload}){
     const [mouseOver, setMouseOver] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [filterMenuOpen, setFilterMenuOpen] = useState(false);
+    const [id, setId] = useAuth();
     const filters = useFilters();
     const router = useRouter();
 
@@ -129,45 +130,50 @@ function ListPost({post, reload}){
 
     return(
         <div className="mt-3" style={{width: "100%", borderBottom: "1px solid black", background: mouseOver ? "#dddddd" : "white", paddingLeft: "20px"}}
-            // onMouseEnter={() => setMouseOver(true)}
-            // onMouseLeave={() => setMouseOver(false)}
             onClick={jumpPostPage}>
             <div className="row">
-                <div className="col-lg-9 col-5"><Link href={"/accounts/" + aid} onClick={(e) => {e.stopPropagation()}}><h4>{aname}</h4></Link></div>
-                <div className="col-lg-2 col-3" style={{paddingTop: "5px"}}>
-                    {date}&nbsp;{time}
-                </div>
-                <div className="col-lg col" style={{ marginLeft: "30px", position: "relative" }}>
-                    <button className="btn rounded-circle border-secondary" onClick={openMenu}>︙</button>
-                    {menuOpen && <div className="border rounded border-secondary"
-                        style={{ position: "absolute", left: "-80px", top: "20px", background: "white" }}>
-                        <div>
-                            <button className="btn btn-light" style={{ padding: "5px 10px", width: "80px" }} onClick={openFilterMenu}>フィルター</button>
-                            {filterMenuOpen && <div className="border rounded border-secondary"
-                                style={{ position: "absolute", left: "-80px", top: "20px", background: "white", zIndex: 100 }}>
-                                {filters.map((filter, index) => (
-                                    <div key={"filter"+filter}>
-                                        <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, index)}>{filter}</button>
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <div><Link href={"/accounts/" + aid} onClick={(e) => {e.stopPropagation()}}><h4>{aname}</h4></Link></div>
+                    <div style={{paddingTop: "5px"}}>
+                        {date}&nbsp;{time}
+                    </div>
+                    <div style={{position: "relative" }}>
+                        <button className="btn rounded-circle border-secondary" onClick={openMenu}>︙</button>
+                        {menuOpen && <div className="border rounded border-secondary"
+                            style={{ position: "absolute", left: "-80px", top: "20px", background: "white" }}>
+                            <div>
+                                <button className="btn btn-light" style={{ padding: "5px 10px", width: "80px" }} onClick={openFilterMenu}>フィルター</button>
+                                {filterMenuOpen && <div className="border rounded border-secondary"
+                                    style={{ position: "absolute", left: "-80px", top: "20px", background: "white", zIndex: 100 }}>
+                                    {filters.map((filter, index) => (
+                                        <div key={"filter"+filter}>
+                                            <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, index)}>{filter}</button>
+                                        </div>
+                                    ))}
+                                    <div>
+                                        <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, -1)}>元に戻す</button>
                                     </div>
-                                ))}
-                                <div>
-                                    <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, -1)}>元に戻す</button>
-                                </div>
-                            </div>}
-                        </div>
-                    </div>}
+                                </div>}
+                            </div>
+                        </div>}
+                    </div>
                 </div>
             </div>
-            <div style={{width: "100%", textAlign: "left"}}>
+            <div className="row" style={{width: "100%", textAlign: "left", paddingBottom: "15px"}}>
                 {contents}
             </div>
-            <br />
-            <div style={{textAlign: "left"}}>
-                {liked ? 
-                    <span><button className="btn" onClick={unLike} ><FaHeart color="red" size={20}/></button>: {likeCount}</span>:
-                    <span><button className="btn" onClick={like} ><FaRegHeart size={20}/></button>: {likeCount}</span>
-                }
-            </div>
+            {id != "" ?
+                <div className="row" style={{textAlign: "left"}}>
+                    {liked ? 
+                        <span><button className="btn" onClick={unLike} ><FaHeart color="red" size={20}/></button>: {likeCount}</span>:
+                        <span><button className="btn" onClick={like} ><FaRegHeart size={20}/></button>: {likeCount}</span>
+                    }
+                </div> 
+            : 
+                <div className="row" style={{textAlign: "left"}}>
+                    <span><Link href="/login"><button className="btn" onClick={(e)=>e.stopPropagation()}><FaRegHeart size={20}/></button></Link>: {likeCount}</span>
+                </div>
+            } 
         </div>
     )
 }
