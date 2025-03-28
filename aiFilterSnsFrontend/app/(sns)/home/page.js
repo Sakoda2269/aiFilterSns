@@ -112,24 +112,25 @@ export default function Home() {
 
     return (
         <div>
-            {id != "" ? <div>
-                <div className="mt-3" style={{ textAlign: "center" }}>
-                    <h3>TimeLine</h3>
-                </div>
-                <PostSender reload={reload} />
-                <Tabs
-                    id="post-tabs"
-                    activeKey={tabKey}
-                    onSelect={k => tabSelect(k)}
-                    justify>
-                    <Tab eventKey="all" title="すべて">
-                        <Posts posts={posts}  reload={postChanges} addPage={changePage} isLast={allPostLastPage}/>
-                    </Tab>
-                    <Tab eventKey="follow" title="フォロー中">
-                        <Posts posts={followPosts}  reload={postChanges} addPage={changeFollowPage} isLast={followPostLastPage}/>
-                    </Tab>
-                </Tabs>
-            </div> :
+            {id != "" ? 
+                <div>
+                    <div className="mt-3" style={{ textAlign: "center" }}>
+                        <h3>TimeLine</h3>
+                    </div>
+                    <PostSender reload={reload} />
+                    <Tabs
+                        id="post-tabs"
+                        activeKey={tabKey}
+                        onSelect={k => tabSelect(k)}
+                        justify>
+                        <Tab eventKey="all" title="すべて">
+                            <Posts posts={posts}  reload={postChanges} addPage={changePage} isLast={allPostLastPage}/>
+                        </Tab>
+                        <Tab eventKey="follow" title="フォロー中">
+                            <Posts posts={followPosts}  reload={postChanges} addPage={changeFollowPage} isLast={followPostLastPage}/>
+                        </Tab>
+                    </Tabs>
+                </div> :
                 <div>
                     <div className="mt-3" style={{ textAlign: "center" }}>
                         <h3>TimeLine</h3>

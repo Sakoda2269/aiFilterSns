@@ -45,7 +45,7 @@ export default function Login() {
     }
 
     return (
-        <div className="container mt-3">
+        <div className="mt-3">
             <h3>ログイン</h3>
             <div className="mt-3">
                 <label className="form-label"><b>メールアドレス</b></label>

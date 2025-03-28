@@ -8,7 +8,7 @@ import { FaRegHeart } from "react-icons/fa6";
 
 export default function Posts({posts, reload, addPage, isLast}) {
     return (
-        <div  style={{overflow: "visible", height: "90vh", width: "100%"}}>
+        <div style={{overflow: "visible", height: "100%", width: "100%"}}>
             {posts.map((value, index) => (
                 <div key={"post" + index} style={{}}>
                     <ListPost post={value} reload={reload}/>

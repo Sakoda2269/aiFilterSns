@@ -127,7 +127,7 @@ export default function Post() {
     }
 
     return (
-        <div className="container mt-3" onClick={() => setMenuOpen(false)} style={{ height: "100vh" }}>
+        <div className="mt-3" onClick={() => setMenuOpen(false)} style={{ height: "100vh" }}>
             {loading ? (
                 <div>
                     loading...
@@ -137,31 +137,29 @@ export default function Post() {
                     (<div>
                         <div className="lr mt-3" style={{ borderBottom: "1px solid black" }}>
                             <span><h3><FaCircleUser size={30} />&nbsp;<Link href={"/accounts/" + post.authorId}>{post.authorName}</Link></h3></span>
-                            <span>
-                                <span>{getDate(post.createdDate)[0]}&nbsp;{getDate(post.createdDate)[1]}</span>
-                                <span style={{ marginLeft: "30px", position: "relative" }}>
-                                    <button className="btn rounded-circle border-secondary" onClick={openMenu}>︙</button>
-                                    {menuOpen && 
-                                        <div className="border rounded border-secondary"
-                                            style={{ position: "absolute", left: "-80px", top: "20px", background: "white" }}>
-                                            {post.authorId == id && <div><button className="btn btn-light" style={{ padding: "5px 10px", width: "80px" }} onClick={deletePost}>削除</button></div>}
-                                            <div>
-                                                <button className="btn btn-light" style={{ padding: "5px 10px", width: "80px" }} onClick={openFilterMenu}>フィルター</button>
-                                                {filterMenuOpen && <div className="border rounded border-secondary"
-                                                    style={{ position: "absolute", left: "-80px", top: "20px", background: "white", zIndex: 100 }}>
-                                                    {filters.map((filter, index) => (
-                                                        <div key={"filter"+filter}>
-                                                            <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, index)}>{filter}</button>
-                                                        </div>
-                                                    ))}
-                                                    <div>
-                                                        <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, -1)}>元に戻す</button>
+                            <span>{getDate(post.createdDate)[0]}&nbsp;{getDate(post.createdDate)[1]}</span>
+                            <span style={{ marginLeft: "30px", position: "relative" }}>
+                                <button className="btn rounded-circle border-secondary" onClick={openMenu}>︙</button>
+                                {menuOpen && 
+                                    <div className="border rounded border-secondary"
+                                        style={{ position: "absolute", left: "-80px", top: "20px", background: "white" }}>
+                                        {post.authorId == id && <div><button className="btn btn-light" style={{ padding: "5px 10px", width: "80px" }} onClick={deletePost}>削除</button></div>}
+                                        <div>
+                                            <button className="btn btn-light" style={{ padding: "5px 10px", width: "80px" }} onClick={openFilterMenu}>フィルター</button>
+                                            {filterMenuOpen && <div className="border rounded border-secondary"
+                                                style={{ position: "absolute", left: "-80px", top: "20px", background: "white", zIndex: 100 }}>
+                                                {filters.map((filter, index) => (
+                                                    <div key={"filter"+filter}>
+                                                        <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, index)}>{filter}</button>
                                                     </div>
-                                                </div>}
-                                            </div>
+                                                ))}
+                                                <div>
+                                                    <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, -1)}>元に戻す</button>
+                                                </div>
+                                            </div>}
                                         </div>
-                                    }
-                                </span>
+                                    </div>
+                                }
                             </span>
                         </div>
 

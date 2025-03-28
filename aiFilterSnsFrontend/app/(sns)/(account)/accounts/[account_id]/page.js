@@ -131,7 +131,7 @@ export default function AccountPage() {
                 (
                     <div>
                         {(200 <= statusCode) && (statusCode <= 299) &&
-                            <div className="container mt-3">
+                            <div className="mt-3">
                                 <Header 
                                     openMenu={openMenu} 
                                     accountId={accountId} 
@@ -220,16 +220,20 @@ function Header({openMenu, accountId, followeeNum, followerNum, accountName, fol
 
 
     return (
-        <div className="lr">
-            <span>
+        <div style={{display: "flex", justifyContent: "space-between"}}>
+            <span style={{width: "70%"}}>
                 <span style={{ display: "flex" }}>
-                    <h3>{accountName}</h3>
-                    {(id != accountId && id != "" && id != null) && <div className="container">
-                        {!following ?
-                            <button className="btn btn-primary rounded-pill" onClick={follow}>フォロー</button>
-                            :
-                            <button className="btn btn-secondary rounded-pill" onClick={unFollow}>フォロー解除</button>}
-                    </div>}
+                    <div style={{paddingRight: "20px"}}>
+                        <h3>{accountName}</h3>
+                    </div>
+                    {(id != accountId && id != "" && id != null) && 
+                        <div>
+                            {!following ?
+                                <button className="btn btn-primary rounded-pill" onClick={follow}>フォロー</button>
+                                :
+                                <button className="btn btn-secondary rounded-pill" onClick={unFollow}>フォロー解除</button>}
+                        </div>
+                    }
                 </span>
                 <div className="container">
                     <div>フォロワー:&nbsp;{followerNum}</div>

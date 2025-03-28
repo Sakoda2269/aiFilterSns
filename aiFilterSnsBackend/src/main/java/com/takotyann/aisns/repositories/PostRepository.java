@@ -281,7 +281,57 @@ public interface PostRepository extends JpaRepository<Post, String>{
 					p.post_id AS post_id, 
 					p.contents AS contents,
 					p.created_date AS created_date,
-					TRUE AS liked,
+					CASE
+						WHEN EXISTS(
+							SELECT *
+							FROM likes
+							WHERE likes.post_id = p.post_id AND likes.account_id = :liker_id
+						) THEN TRUE
+						ELSE FALSE
+					END AS liked,
+					COALESCE(like_count.like_count, 0) AS like_count
+				FROM posts p
+				INNER JOIN accounts a
+				ON p.author_id = a.account_id
+				LEFT JOIN (
+					SELECT
+						post_id,
+						COUNT(1) AS like_count
+					FROM likes
+					GROUP BY post_id
+				) AS like_count
+				USING(post_id)
+				WHERE 
+					p.post_id IN (
+							SELECT post_id
+							FROM likes
+							WHERE account_id = :account_id
+					)
+				ORDER BY p.created_date DESC;
+			""",
+			countQuery="""
+				SELECT COUNT(*)
+				FROM posts p
+				WHERE 
+					p.post_id IN (
+							SELECT post_id
+							FROM likes
+							WHERE account_id = :account_id
+					)
+				""",
+			nativeQuery=true
+	)
+	Page<PostDto> getLikedPost(@Param("account_id") String accountId, @Param("liker_id") String likerAccountId, Pageable pageable);
+	
+	@Query(
+			value="""
+				SELECT 
+					a.account_id AS author_id, 
+					a.name AS author_name, 
+					p.post_id AS post_id, 
+					p.contents AS contents,
+					p.created_date AS created_date,
+					FALSE AS liked,
 					COALESCE(like_count.like_count, 0) AS like_count
 				FROM posts p
 				INNER JOIN accounts a
