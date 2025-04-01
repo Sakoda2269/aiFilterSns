@@ -111,7 +111,7 @@ export default function Home() {
     }
 
     return (
-        <div>
+        <div style={{height: "95vh"}}>
             {id != "" ? 
                 <div>
                     <div className="mt-3" style={{ textAlign: "center" }}>

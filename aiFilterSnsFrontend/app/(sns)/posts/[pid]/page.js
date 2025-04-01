@@ -127,7 +127,7 @@ export default function Post() {
     }
 
     return (
-        <div className="mt-3" onClick={() => setMenuOpen(false)} style={{ height: "100vh" }}>
+        <div className="mt-3" onClick={() => setMenuOpen(false)} style={{ height: "90vh" }}>
             {loading ? (
                 <div>
                     loading...
