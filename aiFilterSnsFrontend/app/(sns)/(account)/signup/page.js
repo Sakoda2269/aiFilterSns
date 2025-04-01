@@ -15,7 +15,26 @@ export default function Signup() {
     const [error, setError] = useState("");
     const [id, setId] = useAuth();
 
-    const send = async () => {
+    const login = async (email, pass) => {
+        const body = {
+            email: email,
+            password: pass
+        };
+        const header = { "Content-Type": "application/json" };
+        const res = await fetch("/api/login", {
+            method: "POST",
+            body: JSON.stringify(body),
+            headers: header, 
+            credentials: 'include'
+        });
+        if(res.ok) {
+            const data = await res.text();
+            setId(data);
+            router.push("/accounts/" + data);
+        }
+    }
+
+    const signup = async () => {
         if(pass != repass) {
             setError("パスワードが一致しません");
             return
@@ -34,9 +53,7 @@ export default function Signup() {
         if(res.ok) {
             let text = await res.text();
             text = text.substring(1, text.length - 1);
-            setId(text);
-            console.log(text);
-            router.push("/home");
+            await login(email, pass);
         } else {
             const data = await res.text();
             setError(data);
@@ -66,7 +83,7 @@ export default function Signup() {
                 {error}
             </div>}
             <div className="mt-3">
-                <button className="btn btn-primary" onClick={send}>登録</button>
+                <button className="btn btn-primary" onClick={signup}>登録</button>
             </div>
         </div>
     )
