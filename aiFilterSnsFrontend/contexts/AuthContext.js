@@ -17,7 +17,7 @@ export function AuthProvider ({children}) {
             }
         }
         const getFilters = async() => {
-            const res = await fetch("/api/ai/filter", {
+            const res = await fetch("/api/ai/filter/filters", {
                 method: "GET",
                 credentials: "include"
             });
