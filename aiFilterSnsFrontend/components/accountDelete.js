@@ -20,7 +20,7 @@ export default function AccountDeletePage() {
             method: "POST",
             body: JSON.stringify({ "password": password }),
             headers: { "Content-Type": "application/json" },
-            credentials: "include"
+            credentials: "same-origin"
         });
         if (res.ok) {
             router.push("/accounts/delete?success=true")

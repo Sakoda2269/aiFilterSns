@@ -33,7 +33,7 @@ export default function Login() {
             method: "POST",
             body: JSON.stringify(body),
             headers: header, 
-            credentials: 'include'
+            credentials: 'same-origin'
         });
         if(res.ok) {
             const data = await res.text();

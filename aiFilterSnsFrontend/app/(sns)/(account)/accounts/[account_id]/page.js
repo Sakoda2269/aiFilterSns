@@ -35,7 +35,7 @@ export default function AccountPage() {
     const [id, setId] = useAuth();
 
     const getAccountPosts = async () => {
-        const res = await fetch("/api/accounts/" + params.account_id + "/posts?page=0", { method: "GET", credentials: "include" })
+        const res = await fetch("/api/accounts/" + params.account_id + "/posts?page=0", { method: "GET", credentials: "same-origin" })
         if (res.ok) {
             const data = await res.json();
             setPosts(data.posts);
@@ -47,7 +47,7 @@ export default function AccountPage() {
     }
 
     const getLikePosts = async () => {
-        const res = await fetch("/api/accounts/" + params.account_id + "/posts/likes?page=0", { method: "GET", credentials: "include" })
+        const res = await fetch("/api/accounts/" + params.account_id + "/posts/likes?page=0", { method: "GET", credentials: "same-origin" })
         if (res.ok) {
             const data = await res.json();
             setLikePosts(data.posts);
@@ -59,7 +59,7 @@ export default function AccountPage() {
     }
 
     const addAccountPostPage = async () => {
-        const res = await fetch("/api/accounts/" + params.account_id + "/posts?page=" + (accountPostPageNum + 1), { method: "GET", credentials: "include" })
+        const res = await fetch("/api/accounts/" + params.account_id + "/posts?page=" + (accountPostPageNum + 1), { method: "GET", credentials: "same-origin" })
         if (res.ok) {
             const data = await res.json();
             setPosts(p => [...p, ...data.posts]);
@@ -70,7 +70,7 @@ export default function AccountPage() {
     }
 
     const addLikedPostPage = async() => {
-        const res = await fetch("/api/accounts/" + params.account_id + "/posts/likes?page=" + (accountLikedPostPageNum + 1), { method: "GET", credentials: "include" })
+        const res = await fetch("/api/accounts/" + params.account_id + "/posts/likes?page=" + (accountLikedPostPageNum + 1), { method: "GET", credentials: "same-origin" })
         if (res.ok) {
             const data = await res.json();
             setLikePosts(p => [...p, ...data.posts]);
@@ -84,7 +84,7 @@ export default function AccountPage() {
         const getAccount = async () => {
             const res = await fetch("/api/accounts/" + params.account_id, {
                 method: "GET",
-                credentials: 'include'
+                credentials: 'same-origin'
             });
             if (res.ok) {
                 const data = await res.json();
@@ -184,7 +184,7 @@ function Header({openMenu, accountId, followeeNum, followerNum, accountName, fol
             body: JSON.stringify({ "follow": true }),
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            credentials: 'include'
+            credentials: 'same-origin'
         });
         if (res.ok) {
             setFollowing(true);
@@ -198,7 +198,7 @@ function Header({openMenu, accountId, followeeNum, followerNum, accountName, fol
             body: JSON.stringify({ "follow": false }),
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            credentials: 'include'
+            credentials: 'same-origin'
         });
         if (res.ok) {
             setFollowing(false);
@@ -213,7 +213,7 @@ function Header({openMenu, accountId, followeeNum, followerNum, accountName, fol
         setId("");
         const res = await fetch("/api/logout", {
             method: "POST",
-            credentials: "include"
+            credentials: "same-origin"
         })
         router.push("/home")
     }

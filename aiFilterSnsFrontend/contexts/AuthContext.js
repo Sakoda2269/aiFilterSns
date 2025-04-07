@@ -10,7 +10,7 @@ export function AuthProvider ({children}) {
 
     useEffect(() => {
         const getAuth = async () => {
-            const res = await fetch("/api/auth", { method: "POST", credentials: "include" });
+            const res = await fetch("/api/auth", { method: "POST", credentials: "same-origin" });
             if(res.ok) {
                 const text = await res.text();
                 setIsAuth(text);
@@ -19,7 +19,7 @@ export function AuthProvider ({children}) {
         const getFilters = async() => {
             const res = await fetch("/api/ai/filter/filters", {
                 method: "GET",
-                credentials: "include"
+                credentials: "same-origin"
             });
             if(res.ok) {
                 const data = await res.json();

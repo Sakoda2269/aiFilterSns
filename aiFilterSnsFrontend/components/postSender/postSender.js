@@ -18,7 +18,7 @@ export default function PostSender({ reload }) {
         const res = await fetch("/api/posts", {
             method: "POST",
             body: body,
-            credentials: "include",
+            credentials: "same-origin",
             headers: { "Content-Type": "application/json" }
         });
         if (res.ok) {
