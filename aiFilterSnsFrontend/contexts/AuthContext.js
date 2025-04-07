@@ -17,7 +17,7 @@ export function AuthProvider ({children}) {
             }
         }
         const getFilters = async() => {
-            const res = await fetch("/api/ai/filter/filters", {
+            const res = await fetch("/api/ai/filter", {
                 method: "GET",
                 credentials: "same-origin"
             });
@@ -52,7 +52,7 @@ export function useAuth() {
 export function useFilters() {
     const context = useContext(filtersContext);
     if(!context) {
-        throw new Error("useAuth must be used with FilterProvider");
+        throw new Error("useFilters must be used with FilterProvider");
     }
     return context.filters;
 }
