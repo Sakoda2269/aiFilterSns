@@ -34,3 +34,7 @@ API_SERVER_URL=http://backend:8080/api
 を定義し、
 dokcer-compose up --build
 で実行可能
+
+***
+
+[使ってみる](https://takotyann-ai-sns.japaneast.cloudapp.azure.com/home)
