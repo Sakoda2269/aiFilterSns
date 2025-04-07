@@ -1,10 +1,17 @@
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-jdk-slim AS builder
 
 # create a work dir.
-WORKDIR /app
+WORKDIR /home/app
+
+COPY . .
+
+RUN ./gradlew clean bootJar --no-daemon
+
+
+FROM openjdk:17-jdk-slim
 
 # copy a jvm app.
-COPY build/libs/*SNAPSHOT.jar app.jar
+COPY --from=builder /home/app/build/libs/*SNAPSHOT.jar app.jar
 
 # open port 8080 for a jvm app.
 EXPOSE 8080
