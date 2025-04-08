@@ -1,6 +1,7 @@
 package com.takotyann.aisns.services;
 
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -30,7 +31,8 @@ public class PostService {
 		post.setPostId(id);
 		post.setAuthorId(author.getAccountId());
 		post.setContents(contents);
-		post.setCreatedDate(new Date());
+		System.out.println(ZonedDateTime.now(ZoneId.of("Asia/Tokyo")).toLocalDateTime());
+		post.setCreatedDate(ZonedDateTime.now(ZoneId.of("Asia/Tokyo")).toLocalDateTime());
 		postRepository.save(post);
 		return id;
 	}

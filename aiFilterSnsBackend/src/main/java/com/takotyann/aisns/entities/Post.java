@@ -1,6 +1,6 @@
 package com.takotyann.aisns.entities;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,6 +24,6 @@ public class Post {
 	private String contents;
 	
 	@Column(name="created_date")
-	private Date createdDate;
+	private LocalDateTime  createdDate;
 	
 }
