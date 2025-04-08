@@ -48,7 +48,16 @@ public class JwtCreateFilter extends UsernamePasswordAuthenticationFilter{
 			cookie.setSecure(IS_SECURE);
 			cookie.setPath("/");
 			cookie.setMaxAge(24 * 60 * 60);//1 day
-			res.addCookie(cookie);
+//			res.addCookie(cookie);
+			String cookieString = String.format(
+				    "%s=%s; Max-Age=%d; Path=%s; HttpOnly; %s; SameSite=Strict",
+				    cookie.getName(),
+				    cookie.getValue(),
+				    cookie.getMaxAge(),
+				    cookie.getPath(),
+				    cookie.getSecure() ? "SECURE" : ""
+				);
+			res.setHeader("Set-Cookie", cookieString);
 			
 //			res.setHeader("X-AUHT-TOKEN", token);
 //			res.setHeader("email", email);
