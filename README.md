@@ -7,10 +7,8 @@
 
 バックエンド Spring Boot 3.4.1
 
-データベース PostgreSQL latest
-
 ***
-docker-composeと同じディレクトリに.envを作成し、環境変数として
+docker-compose.ymlと同じディレクトリに.envを作成し、環境変数として
 
 ```text:.env
 
