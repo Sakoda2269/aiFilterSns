@@ -4,6 +4,9 @@ import com.takotyann.aisns.entities.Account;
 
 import lombok.Data;
 
+/**
+ * Account data to send to client.
+ */
 @Data
 public class AccountDto {
 	

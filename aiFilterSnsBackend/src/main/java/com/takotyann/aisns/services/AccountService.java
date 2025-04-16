@@ -1,8 +1,5 @@
 package com.takotyann.aisns.services;
 
-import java.util.List;
-import java.util.UUID;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,9 +17,16 @@ import com.takotyann.aisns.exceptions.PermissionDeniedException;
 import com.takotyann.aisns.repositories.AccountRepository;
 import com.takotyann.aisns.repositories.FollowRepository;
 
+import java.util.List;
+import java.util.UUID;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+
+/**
+ * Process about account.
+ */
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +38,15 @@ public class AccountService {
 	
 	private static final boolean IS_SECURE = Boolean.parseBoolean(System.getenv("SECURE"));
 	
+	/**
+	 * 
+	 * Register new account. Throw EmailConflictException if email is duplicated.
+	 * 
+	 * @param email Account's email. This must not be duplicated.
+	 * @param name Account's name.
+	 * @param password Account's password.
+	 * @return Id of created new account.
+	 */
 	public String registerAccount(String email, String name, String password) {
 		if(accountRepository.existsByEmail(email)) {
 			throw new EmailConflictException("this email has already used");
@@ -51,10 +64,20 @@ public class AccountService {
 		return id;
 	}
 	
+	/**
+	 * Find account by account id. Throw AccountNotFoundException if account is not found.
+	 * @param accountId Id of account you want to find.
+	 * @return Account.
+	 */
 	public Account getAccountById(String accountId) {
 		return accountRepository.findById(accountId).orElseThrow(() -> new AccountNotFoundException("account not found"));
 	}
 	
+	/**
+	 * Find account by id and return accountDto. Throw AccountNotFoundException if account is not found.
+	 * @param accountId Id of account you want to find.
+	 * @return AccountDto.
+	 */
 	public AccountDto getAccountDtoById(String accountId) {
 		Account account = getAccountById(accountId);
 		int followerNum = followRepository.getFollowerNum(accountId);
@@ -70,10 +93,18 @@ public class AccountService {
 		return accountDto;
 	}
 	
+	/**
+	 * Get all accounts.
+	 * @return All accounts.
+	 */
 	public List<Account> getAllAccounts() {
 		return accountRepository.findAll();
 	}
 	
+	/**
+	 * Get current logined account.
+	 * @return logined account. Return null if unauthorized.
+	 */
 	public Account getLoginedAccount() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth != null && auth.isAuthenticated()) {
@@ -87,6 +118,12 @@ public class AccountService {
 		return null;
 	}
 	
+	/**
+	 * Delete logined account. 
+	 * Throw LogineRequireException if account is unauthorized.
+	 * @param password password of account you want to delete.
+	 * @param res HttpServletResponse.
+	 */
 	public void deleteAccount(String password, HttpServletResponse res) {
 		logout(res);
 		Account logined = getLoginedAccount();
@@ -100,6 +137,12 @@ public class AccountService {
 		}
 	}
 	
+	/**
+	 * Follow for follower to account whose accountId is followeedId.
+	 * @param follower account to follow.
+	 * @param followeeId Id of followed account.
+	 * @return Number of followee's followers.
+	 */
 	public int follow(Account follower, String followeeId) {
 		Follow follow = new Follow();
 		follow.setFollowId(new FollowId(follower.getAccountId(), followeeId));
@@ -107,11 +150,21 @@ public class AccountService {
 		return followRepository.getFollowerNum(followeeId);
 	}
 	
+	/**
+	 * UnFollow for follower to account whose accountId is param's accountId.
+	 * @param follower Account to unfollow.
+	 * @param accountId Id of unfollowed account. 
+	 * @return Number of followee's followers.
+	 */
 	public int unFollow(Account follower, String accountId) {
 		followRepository.deleteById(new FollowId(follower.getAccountId(), accountId));
 		return followRepository.getFollowerNum(accountId);
 	}
 	
+	/**
+	 * Logout. Delete cookie having JWT.
+	 * @param res HttpServletResponse.
+	 */
 	public void logout(HttpServletResponse res) {
 		Cookie cookie = new Cookie("token", null);
 		cookie.setMaxAge(0);

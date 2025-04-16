@@ -21,6 +21,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import com.takotyann.aisns.config.security.filter.JwtCookieAuthenticationFilter;
 import com.takotyann.aisns.config.security.filter.JwtCreateFilter;
 
+
+/**
+ * 		SecurityConfig sets url permission.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {

@@ -1,7 +1,5 @@
 package com.takotyann.aisns.config.security.filter;
 
-import java.util.Date;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,10 +11,15 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.takotyann.aisns.config.security.AccountDetails;
 
+import java.util.Date;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * 		Create JWT and set JWT in cookie when use logins;
+ */
 public class JwtCreateFilter extends UsernamePasswordAuthenticationFilter{
 	
 	private final AuthenticationManager authenticationManager;

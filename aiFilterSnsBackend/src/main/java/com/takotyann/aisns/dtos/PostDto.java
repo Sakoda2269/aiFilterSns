@@ -5,6 +5,10 @@ import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * Post data to send to client.
+ */
+
 @Data
 @AllArgsConstructor
 public class PostDto {

@@ -1,8 +1,5 @@
 package com.takotyann.aisns.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +16,15 @@ import com.takotyann.aisns.entities.Account;
 import com.takotyann.aisns.services.AccountService;
 import com.takotyann.aisns.services.PostService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+
+/**
+ * 		Receive request and send response about accounts.
+ */
 
 @RestController
 @RequestMapping("/api/accounts")

@@ -6,7 +6,10 @@ import org.springframework.web.util.WebUtils;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-
+/**
+	Authenticate filter by JWT in cookie
+	
+*/
 public class JwtCookieAuthenticationFilter extends AbstractPreAuthenticatedProcessingFilter{
 
 	public JwtCookieAuthenticationFilter(AuthenticationManager manager) {

@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 import com.takotyann.aisns.entities.Account;
 import com.takotyann.aisns.repositories.AccountRepository;
 
+/**
+ * 		Find account service by email and create AccountDetails.
+ */
+
 @Service
 public class AccountDetailService implements UserDetailsService{
 

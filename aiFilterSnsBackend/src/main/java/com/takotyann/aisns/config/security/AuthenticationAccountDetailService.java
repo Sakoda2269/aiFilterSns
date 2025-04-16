@@ -13,6 +13,10 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.takotyann.aisns.entities.Account;
 
+/**
+ * 		Verify JWT and authenticate account.
+ */
+
 @Service
 public class AuthenticationAccountDetailService implements AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken>{
 
