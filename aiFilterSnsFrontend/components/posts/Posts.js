@@ -3,24 +3,27 @@ import getDate from "@/util/getDate";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaHeart } from "react-icons/fa";
-import { FaRegHeart } from "react-icons/fa6";
+import { FaHeart, FaRegHeart, FaEllipsisH, FaFilter, FaUndo, FaUser } from "react-icons/fa";
 
 export default function Posts({posts, reload, addPage, isLast}) {
     return (
-        <div style={{overflow: "visible", height: "100%", width: "100%"}}>
+        <div className="space-y-4">
             {posts.map((value, index) => (
-                <div key={"post" + index} style={{}}>
+                <div key={"post" + index} className="animate-slide-up">
                     <ListPost post={value} reload={reload}/>
                 </div>
             ))}
-            <div>
-                {!isLast && (
-                    <div style={{padding: "30px"}}>
-                        <button className="btn btn-light border border-secondary" style={{width: "100%"}} onClick={addPage}>追加で読み込む</button>
-                    </div>
-                )}
-            </div>
+            
+            {!isLast && (
+                <div className="flex justify-center py-8">
+                    <button 
+                        className="btn-secondary px-8 py-3 text-sm font-medium"
+                        onClick={addPage}
+                    >
+                        さらに読み込む
+                    </button>
+                </div>
+            )}
         </div>
     )
 }  
@@ -35,10 +38,9 @@ function ListPost({post, reload}){
     const [liked, setLiked] = useState(post.liked);
     const [date, time] = getDate(created);
     const [likeCount, setLikeCount] = useState(post.likeCount);
-    const [mouseOver, setMouseOver] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const [filterMenuOpen, setFilterMenuOpen] = useState(false);
-    const [id, setId] = useAuth();
+    const [id] = useAuth();
     const filters = useFilters();
     const router = useRouter();
 
@@ -51,7 +53,6 @@ function ListPost({post, reload}){
         setCreated(post.createdDate);
         setLiked(post.liked);
         setLikeCount(post.likeCount);
-
     }, [post])
 
     const jumpPostPage = (e) => {
@@ -126,54 +127,102 @@ function ListPost({post, reload}){
         setFilterMenuOpen(false);
     }
 
-    
-
     return(
-        <div className="mt-3" style={{width: "100%", borderBottom: "1px solid black", background: mouseOver ? "#dddddd" : "white", paddingLeft: "20px"}}
-            onClick={jumpPostPage}>
-            <div className="row">
-                <div style={{display: "flex", justifyContent: "space-between"}}>
-                    <div><Link href={"/accounts/" + aid} onClick={(e) => {e.stopPropagation()}}><h4>{aname}</h4></Link></div>
-                    <div style={{paddingTop: "5px"}}>
-                        {date}&nbsp;{time}
+        <div 
+            className="card hover:shadow-md transition-all duration-200 cursor-pointer group"
+            onClick={jumpPostPage}
+        >
+            {/* Header */}
+            <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center">
+                        <FaUser className="text-white text-sm" />
                     </div>
-                    <div style={{position: "relative" }}>
-                        <button className="btn rounded-circle border-secondary" onClick={openMenu}>︙</button>
-                        {menuOpen && <div className="border rounded border-secondary"
-                            style={{ position: "absolute", left: "-80px", top: "20px", background: "white" }}>
-                            <div>
-                                <button className="btn btn-light" style={{ padding: "5px 10px", width: "80px" }} onClick={openFilterMenu}>フィルター</button>
-                                {filterMenuOpen && <div className="border rounded border-secondary"
-                                    style={{ position: "absolute", left: "-80px", top: "20px", background: "white", zIndex: 100 }}>
+                    <div>
+                        <Link 
+                            href={"/accounts/" + aid} 
+                            onClick={(e) => e.stopPropagation()}
+                            className="font-semibold text-gray-900 hover:text-primary-600 transition-colors"
+                        >
+                            {aname}
+                        </Link>
+                        <p className="text-sm text-gray-500">{date} {time}</p>
+                    </div>
+                </div>
+                
+                <div className="relative">
+                    <button 
+                        className="btn-ghost p-2 transition-colors"
+                        onClick={openMenu}
+                    >
+                        <FaEllipsisH className="text-gray-400 hover:text-gray-600" />
+                    </button>
+                    
+                    {menuOpen && (
+                        <div className="absolute right-0 top-10 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-[120px]">
+                            <button 
+                                className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2"
+                                onClick={openFilterMenu}
+                            >
+                                <FaFilter className="text-xs" />
+                                <span>フィルター</span>
+                            </button>
+                            
+                            {filterMenuOpen && (
+                                <div className="absolute right-full top-0 bg-white border border-gray-200 rounded-lg shadow-lg z-20 min-w-[150px]">
                                     {filters.map((filter, index) => (
-                                        <div key={"filter"+filter}>
-                                            <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, index)}>{filter}</button>
-                                        </div>
+                                        <button 
+                                            key={"filter"+filter}
+                                            className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
+                                            onClick={e => doFilter(e, index)}
+                                        >
+                                            {filter}
+                                        </button>
                                     ))}
-                                    <div>
-                                        <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={e => doFilter(e, -1)}>元に戻す</button>
-                                    </div>
-                                </div>}
-                            </div>
-                        </div>}
-                    </div>
+                                    <button 
+                                        className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2 border-t border-gray-100"
+                                        onClick={e => doFilter(e, -1)}
+                                    >
+                                        <FaUndo className="text-xs" />
+                                        <span>元に戻す</span>
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
-            <div className="row" style={{width: "100%", textAlign: "left", paddingBottom: "15px"}}>
-                <pre>{contents}</pre>
+            
+            {/* Content */}
+            <div className="mb-4">
+                <pre className="whitespace-pre-wrap text-gray-800 font-sans leading-relaxed">
+                    {contents}
+                </pre>
             </div>
-            {id != "" ?
-                <div className="row" style={{textAlign: "left"}}>
-                    {liked ? 
-                        <span><button className="btn" onClick={unLike} ><FaHeart color="red" size={20}/></button>: {likeCount}</span>:
-                        <span><button className="btn" onClick={like} ><FaRegHeart size={20}/></button>: {likeCount}</span>
-                    }
-                </div> 
-            : 
-                <div className="row" style={{textAlign: "left"}}>
-                    <span><Link href="/login"><button className="btn" onClick={(e)=>e.stopPropagation()}><FaRegHeart size={20}/></button></Link>: {likeCount}</span>
-                </div>
-            } 
+            
+            {/* Actions */}
+            <div className="flex items-center space-x-4 pt-3 border-t border-gray-100">
+                {id ? (
+                    <button 
+                        className={`flex items-center space-x-2 px-3 py-1 rounded-full transition-all duration-200 ${
+                            liked 
+                                ? 'text-red-500 bg-red-50 hover:bg-red-100' 
+                                : 'text-gray-500 hover:text-red-500 hover:bg-red-50'
+                        }`}
+                        onClick={liked ? unLike : like}
+                    >
+                        {liked ? <FaHeart className="animate-bounce-subtle" /> : <FaRegHeart />}
+                        <span className="text-sm font-medium">{likeCount}</span>
+                    </button>
+                ) : (
+                    <Link href="/login" onClick={(e) => e.stopPropagation()}>
+                        <button className="flex items-center space-x-2 px-3 py-1 rounded-full text-gray-500 hover:text-red-500 hover:bg-red-50 transition-all duration-200">
+                            <FaRegHeart />
+                            <span className="text-sm font-medium">{likeCount}</span>
+                        </button>
+                    </Link>
+                )}
+            </div>
         </div>
     )
 }
