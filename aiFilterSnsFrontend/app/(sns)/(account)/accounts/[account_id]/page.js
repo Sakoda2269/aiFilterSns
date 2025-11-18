@@ -3,10 +3,10 @@
 import Posts from "@/components/posts/Posts";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
-import { useParams, usePathname, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Tab, Tabs } from "react-bootstrap";
+import { FaEllipsisV, FaUser, FaHeart, FaEdit } from "react-icons/fa";
 
 export default function AccountPage() {
 
@@ -94,7 +94,7 @@ export default function AccountPage() {
                 setFollowing(data.following);
             }
             setStatusCode(res.status)
-            if (res.status == 404) {
+            if (res.status === 404) {
                 setId("");
             }
             setLoading(false)
@@ -103,16 +103,16 @@ export default function AccountPage() {
         setAccountId(params.account_id);
         getAccountPosts();
         getLikePosts();
-    }, [params, myAccount, router])
+    }, [params.account_id, myAccount, setId])
 
     const tabSelect = (k) => {
         setTabKey(k)
-        if(k == "all") {
+        if(k === "all") {
             if(isChanged) {
                 getAccountPosts();
                 setIsChange(false);
             }
-        } else if(k == "like") {
+        } else if(k === "like") {
             if(isChanged) {
                 getLikePosts();
                 setIsChange(false);
@@ -126,56 +126,105 @@ export default function AccountPage() {
     }
 
     return (
-        <div onClick={() => setMenuOpen(false)} style={{ height: "90%" }}>
-            {loading ? (<div>loading...</div>) :
-                (
-                    <div>
-                        {(200 <= statusCode) && (statusCode <= 299) &&
-                            <div className="mt-3">
-                                <Header 
-                                    openMenu={openMenu} 
-                                    accountId={accountId} 
-                                    followeeNum={followeeNum}
-                                    followerNum={followerNum}
-                                    following={following}
-                                    accountName={accountName}
-                                    menuOpen={menuOpen}
-                                    setFollowing = {setFollowing}
-                                    setFollowerNum={setFollowerNum}
-                                    />
-                                <Tabs
-                                    id="post-tabs"
-                                    activeKey={tabKey}
-                                    onSelect={k => tabSelect(k)}
-                                    justify>
-                                    <Tab eventKey="all" title="自分の投稿">
-                                        <Posts posts={posts} reload={() => setIsChange(true)} addPage={addAccountPostPage} isLast={accountPostLastPage}/>
-                                    </Tab>
-                                    <Tab eventKey="like" title="イイねした投稿">
-                                        <Posts posts={likePosts} reload={() => setIsChange(true)} addPage={addLikedPostPage} isLast={accountLikedPostLastPage}/>
-                                    </Tab>
-                                </Tabs>
+        <div onClick={() => setMenuOpen(false)} className="min-h-screen bg-gray-50">
+            {loading ? (
+                <div className="flex items-center justify-center min-h-screen">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+                </div>
+            ) : (
+                <div className="max-w-4xl mx-auto px-4 py-6">
+                    {(200 <= statusCode) && (statusCode <= 299) && (
+                        <div className="space-y-6">
+                            <Header 
+                                openMenu={openMenu} 
+                                accountId={accountId} 
+                                followeeNum={followeeNum}
+                                followerNum={followerNum}
+                                following={following}
+                                accountName={accountName}
+                                menuOpen={menuOpen}
+                                setFollowing={setFollowing}
+                                setFollowerNum={setFollowerNum}
+                            />
+                            
+                            {/* Custom Tabs */}
+                            <div className="card">
+                                <div className="flex border-b border-gray-200">
+                                    <button
+                                        className={`flex-1 py-3 px-4 text-center font-medium transition-colors duration-200 ${
+                                            tabKey === "all"
+                                                ? "text-primary-600 border-b-2 border-primary-600"
+                                                : "text-gray-500 hover:text-gray-700"
+                                        }`}
+                                        onClick={() => tabSelect("all")}
+                                    >
+                                        <FaEdit className="inline mr-2" />
+                                        自分の投稿
+                                    </button>
+                                    <button
+                                        className={`flex-1 py-3 px-4 text-center font-medium transition-colors duration-200 ${
+                                            tabKey === "like"
+                                                ? "text-primary-600 border-b-2 border-primary-600"
+                                                : "text-gray-500 hover:text-gray-700"
+                                        }`}
+                                        onClick={() => tabSelect("like")}
+                                    >
+                                        <FaHeart className="inline mr-2" />
+                                        イイねした投稿
+                                    </button>
+                                </div>
+                                
+                                <div className="p-6">
+                                    {tabKey === "all" && (
+                                        <Posts 
+                                            posts={posts} 
+                                            reload={() => setIsChange(true)} 
+                                            addPage={addAccountPostPage} 
+                                            isLast={accountPostLastPage}
+                                        />
+                                    )}
+                                    {tabKey === "like" && (
+                                        <Posts 
+                                            posts={likePosts} 
+                                            reload={() => setIsChange(true)} 
+                                            addPage={addLikedPostPage} 
+                                            isLast={accountLikedPostLastPage}
+                                        />
+                                    )}
+                                </div>
                             </div>
-                        }
-                        {statusCode == 404 &&
-                            <div className="container mt-3">
-                                <h3>アカウントが見つかりません</h3>
-                                {myAccount && 
-                                    <div className="mt-3">
-                                        <Link href="/login"><button className="btn btn-primary">ログイン</button></Link>
-                                    </div>
-                                }
+                        </div>
+                    )}
+                    
+                    {statusCode === 404 && (
+                        <div className="flex items-center justify-center min-h-screen">
+                            <div className="card text-center max-w-md">
+                                <div className="mb-6">
+                                    <FaUser className="mx-auto text-6xl text-gray-300 mb-4" />
+                                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                                        アカウントが見つかりません
+                                    </h3>
+                                    <p className="text-gray-600">
+                                        指定されたアカウントは存在しないか、削除されています。
+                                    </p>
+                                </div>
+                                {myAccount && (
+                                    <Link href="/login">
+                                        <button className="btn-primary">
+                                            ログイン
+                                        </button>
+                                    </Link>
+                                )}
                             </div>
-                        }
-                    </div>
-                )
-            }
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
 
 function Header({openMenu, accountId, followeeNum, followerNum, accountName, following, menuOpen, setFollowing, setFollowerNum}) {
-
     const router = useRouter()
     const [id, setId] = useAuth();
 
@@ -203,7 +252,6 @@ function Header({openMenu, accountId, followeeNum, followerNum, accountName, fol
         if (res.ok) {
             setFollowing(false);
             const num = await res.text();
-            console.log(num)
             setFollowerNum(Number(num))
         }
     }
@@ -218,47 +266,83 @@ function Header({openMenu, accountId, followeeNum, followerNum, accountName, fol
         router.push("/home")
     }
 
-
     return (
-        <div style={{display: "flex", justifyContent: "space-between"}}>
-            <span style={{width: "70%"}}>
-                <span style={{ display: "flex" }}>
-                    <div style={{paddingRight: "20px"}}>
-                        <h3>{accountName}</h3>
+        <div className="card">
+            <div className="flex items-start justify-between">
+                {/* Profile Info */}
+                <div className="flex-1">
+                    <div className="flex items-center space-x-4 mb-4">
+                        <div className="w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center">
+                            <FaUser className="text-white text-xl" />
+                        </div>
+                        <div>
+                            <h1 className="text-2xl font-bold text-gray-900 mb-1">{accountName}</h1>
+                            <div className="flex space-x-6 text-sm text-gray-600">
+                                <span>
+                                    <span className="font-semibold text-gray-900">{followerNum}</span> フォロワー
+                                </span>
+                                <span>
+                                    <span className="font-semibold text-gray-900">{followeeNum}</span> フォロー中
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    {(id != accountId && id != "" && id != null) && 
-                        <div>
-                            {!following ?
-                                <button className="btn btn-primary rounded-pill" onClick={follow}>フォロー</button>
-                                :
-                                <button className="btn btn-secondary rounded-pill" onClick={unFollow}>フォロー解除</button>}
+                    
+                    {/* Follow Button */}
+                    {(id !== accountId && id !== "" && id !== null) && (
+                        <div className="mb-4">
+                            {!following ? (
+                                <button 
+                                    className="btn-primary px-6 py-2 rounded-full"
+                                    onClick={follow}
+                                >
+                                    フォロー
+                                </button>
+                            ) : (
+                                <button 
+                                    className="btn-secondary px-6 py-2 rounded-full border border-gray-300"
+                                    onClick={unFollow}
+                                >
+                                    フォロー解除
+                                </button>
+                            )}
                         </div>
-                    }
-                </span>
-                <div className="container">
-                    <div>フォロワー:&nbsp;{followerNum}</div>
-                    <div>フォロー中:&nbsp;{followeeNum}</div>
+                    )}
                 </div>
-            </span>
-            <span>
-                <span style={{ marginLeft: "30px", position: "relative" }}>
-                    <button className="btn rounded-circle border-secondary" onClick={openMenu}>︙</button>
-                    {menuOpen && <div className="border rounded border-secondary"
-                        style={{ position: "absolute", left: "-130px", top: "20px", background: "white", padding: "1px" }}>
-                        {accountId == id && <div>
-                            <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }} onClick={logout}>ログアウト</button>
-                        </div>}
-                        <div>
-                            <button className="btn btn-light" style={{ padding: "5px 10px", width: "150px" }}>通報</button>
+                
+                {/* Menu */}
+                <div className="relative">
+                    <button 
+                        className="btn-ghost p-2 rounded-full"
+                        onClick={openMenu}
+                    >
+                        <FaEllipsisV className="text-gray-400" />
+                    </button>
+                    
+                    {menuOpen && (
+                        <div className="absolute right-0 top-12 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-[160px]">
+                            {accountId === id && (
+                                <button 
+                                    className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-100"
+                                    onClick={logout}
+                                >
+                                    ログアウト
+                                </button>
+                            )}
+                            <button className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50">
+                                通報
+                            </button>
+                            {accountId === id && (
+                                <Link href="/accounts/delete">
+                                    <button className="w-full px-4 py-3 text-left text-sm text-red-600 hover:bg-red-50">
+                                        アカウント削除
+                                    </button>
+                                </Link>
+                            )}
                         </div>
-                        {accountId == id && <div>
-                            <Link href={"/accounts/delete"}>
-                                <button className="btn btn-light" style={{ color: "red", padding: "5px 10px", width: "150px" }}>アカウント削除</button>
-                            </Link>
-                        </div>}
-                    </div>}
-                </span>
-            </span>
+                    )}
+                </div>
+            </div>
         </div>
     )
 }
