@@ -60,7 +60,7 @@ public class FilterController {
 		
 		
 		return webClient.post()
-				.uri("/gemini-2.0-flash:generateContent?key=" + API_KEY)
+				.uri("?key=" + API_KEY)
 				.bodyValue(prompt.formatted(filters[filter], post))
 				.header("Content-Type", "application/json")
 				.retrieve()
