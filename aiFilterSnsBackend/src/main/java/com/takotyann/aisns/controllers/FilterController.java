@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +25,7 @@ public class FilterController {
 	private final WebClient webClient;
 	private static final String API_KEY = System.getenv("GEMINI_API_KEY");
 	private static final String API_URL = System.getenv("GEMINI_API_URL");
+	private static final Logger log = LoggerFactory.getLogger(FilterController.class);
 	private static final String[] filters = {
 			"お嬢様言葉", 
 			"ツンデレ妹言葉", 
@@ -57,8 +60,8 @@ public class FilterController {
 		if(filter < 0 || filters.length <= filter) {
 			throw new FilterException("そのフィルターは存在しません");
 		}
-		System.out.println(API_URL);
 		
+		log.debug(API_URL);
 		return webClient.post()
 				.uri("?key=" + API_KEY)
 				.bodyValue(prompt.formatted(filters[filter], post))
