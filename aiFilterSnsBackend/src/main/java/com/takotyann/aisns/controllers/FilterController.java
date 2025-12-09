@@ -57,7 +57,7 @@ public class FilterController {
 		if(filter < 0 || filters.length <= filter) {
 			throw new FilterException("そのフィルターは存在しません");
 		}
-		
+		System.out.println(API_URL);
 		
 		return webClient.post()
 				.uri("?key=" + API_KEY)
